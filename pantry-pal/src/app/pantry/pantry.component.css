@@ -1,0 +1,58 @@
+.sections-container {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    float: left;
+}
+
+.section {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ingredient-box {
+    padding: 10px;
+    border: 1px solid #CBA052;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #046A38;
+    color: #E7E3C6;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.floating-button:hover {
+    background-color: #719949;
+    color: #F8E08E;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+}
+.submit-row{
+    display: flex;
+    justify-content: flex-end;
+}
