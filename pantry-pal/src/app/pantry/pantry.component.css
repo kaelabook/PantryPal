@@ -52,7 +52,20 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
 }
+
 .submit-row{
+    margin-top: 30px;
     display: flex;
     justify-content: flex-end;
+}
+
+#foodQuantity, #unitType {
+    width: 80px;
+}
+#foodName{
+    flex-grow: 2;
+}
+
+.form-group + .form-group {
+    margin-top: 20px;
 }

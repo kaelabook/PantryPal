@@ -44,7 +44,7 @@
         </div>
         <div class="section" id="seasoning-section">
             <h2>Seasonings</h2>
-            <div class="grid-container" id="season">
+            <div class="grid-container" id="seasonings">
                 <div class="ingredient-box" *ngFor="let ingredient of ingredients['season']">
                     {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
                 </div>
@@ -52,7 +52,7 @@
         </div>
         <div class="section" id="subsitute-section">
             <h2>Substitutions</h2>
-            <div class="grid-container" id="sub">
+            <div class="grid-container" id="substitutions">
                 <div class="ingredient-box" *ngFor="let ingredient of ingredients['sub']">
                     {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
                 </div>
@@ -73,19 +73,13 @@
 
 <div class="popup" *ngIf="showPopup">
     <form (ngSubmit)="addIngredient()">
-        <h2>Add a Food Item</h2>
+        <h2>Add an Ingredient</h2>
 
         <div class="input-row">
-            <label for="foodName">Food Name:</label>
+            <label for="foodName">Name:</label>
             <input type="text" id="foodName" [(ngModel)]="newIngredient.name" name="foodName" required>
             
-            <label for="foodQuantity">Quantity:</label>
-            <input type="number" id="foodQuantity" [(ngModel)]="newIngredient.quantity" name="foodQuantity" min="1" required>
-            
-            <label for="unitType">Quantity Type:</label>
-            <input type="text" id="unitType" [(ngModel)]="newIngredient.unit" name="unitType" required>
-            
-            <label for="foodType">Food Type:</label>
+            <label for="foodType"> Type:</label>
             <select id="foodType" [(ngModel)]="newIngredient.type" name="foodType">
                 <option value="fruits">Fruits</option>
                 <option value="vegetables">Vegetables</option>
@@ -96,6 +90,12 @@
                 <option value="sub">Substitution</option>
                 <option value="misc">Misc.</option>
             </select>
+
+            <label for="foodQuantity"> Quantity:</label>
+            <input type="number" id="foodQuantity" [(ngModel)]="newIngredient.quantity" name="foodQuantity" min="1" required>
+            
+            <label for="unitType"> Measurment:</label>
+            <input type="text" id="unitType" [(ngModel)]="newIngredient.unit" name="unitType">
         </div>
 
         <div class="submit-row">

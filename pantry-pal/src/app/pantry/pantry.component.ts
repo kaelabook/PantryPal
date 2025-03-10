@@ -27,12 +27,15 @@ export class PantryComponent {
 	}
   
 	addIngredient() {
-		if (this.newIngredient.name.trim() && this.newIngredient.unit.trim()) {
-			this.ingredients[this.newIngredient.type].push({ 
+		if (this.newIngredient.name.trim() && this.newIngredient.quantity > 0) {
+			const ingredientToAdd = { 
 		  		name: this.newIngredient.name, 
 		  		quantity: this.newIngredient.quantity, 
-		  		unit: this.newIngredient.unit 
-			});
+		  		unit: (this.newIngredient.unit.trim() || '')
+			};
+
+			this.ingredients[this.newIngredient.type].push(ingredientToAdd);
+			
 			this.newIngredient = { name: '', quantity: 1, unit: '', type: 'misc' };
 			this.showPopup = false;
 		}
