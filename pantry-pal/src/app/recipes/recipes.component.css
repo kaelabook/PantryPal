@@ -1,95 +1,180 @@
+/* Recipes container */
 .recipes-container {
-    padding: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Grid layout for recipe cards */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.recipe-card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #CBA052;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-card h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.recipe-description {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.ingredients-list {
+  font-size: 0.9em;
+  margin-bottom: 15px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-group button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #46a049;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.button-group button:hover {
+  background-color: #3d8c3d;
+}
+
+/* Floating button */
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #046A38;
+  color: #E7E3C6;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.floating-button:hover {
+  background-color: #719949;
+  color: #F8E08E;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+  max-height: 80vh;
+  overflow-y: auto;
+  width: 80%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="range"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 5px 0;
+  border: 1px solid #CBA052;
+  border-radius: 5px;
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+.slider-group {
+  margin-top: 15px;
+}
+
+button {
+  margin-top: 10px;
+}
+
+.add-ingredient-btn {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.instructions-section {
+  margin-top: 20px;
+}
+
+.instructions-section label {
+  margin-top: 15px;
+  display: block;
+}
+
+.submit-row {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .recipe-item {
-    background-color: #f9f9f9;
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid #CBA052;
-    display: flex;
-    flex-direction: column;
+}
+
+@media (max-width: 600px) {
+  .recipes-grid {
+    grid-template-columns: repeat(1, 1fr);
   }
-  
-  .ingredient-form {
-    margin-top: 10px;
-  }
-  
-  .floating-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: #046A38;
-    color: #E7E3C6;
-    font-size: 24px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  .floating-button:hover {
-    background-color: #719949;
-    color: #F8E08E;
-  }
-  
-  .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
-    max-height: 80vh;
-    overflow-y: auto;
-    width: 80%;
-  }
-  
-  .submit-row {
-    margin-top: 30px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  #recipeName, #recipeDescription, #recipeInstructions {
-    width: 100%;
-  }
-  
-  textarea {
-    height: 100px;
-  }
-  
-  input[type="range"] {
-    width: 100%;
-  }
-  
-  .slider-group {
-    margin-top: 15px;
-  }
-  
-  button {
-    margin-top: 10px;
-  }
-  
-  .add-ingredient-btn {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .ingredient-form button {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .instructions-section {
-    margin-top: 20px;
-  }
-  
-  .instructions-section label {
-    margin-top: 15px;
-    display: block;
-  }
-  
+}
+
+/* Larger and green buttons for Save and Cancel */
+.submit-row button {
+  padding: 12px 24px; /* Make buttons larger */
+  background-color: #46a049; /* Green color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px; /* Larger text */
+}
+
+.submit-row button:hover {
+  background-color: #3d8c3d; /* Darker green on hover */
+}
+
+.submit-row button[type="button"] {
+  background-color: #f44336; /* Red color for Cancel button */
+}
+
+.submit-row button[type="button"]:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}

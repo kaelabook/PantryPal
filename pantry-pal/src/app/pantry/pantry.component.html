@@ -5,8 +5,8 @@
 
   <!-- Search and Filter Section -->
   <div class="search-filter-container">
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." (input)="applySearchFilter()" />
-    <select [(ngModel)]="selectedCategory" (change)="applyFilter()">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search..." (input)="applySearchFilter()" class="search-bar" />
+    <select [(ngModel)]="selectedCategory" (change)="applyFilter()" class="filter-dropdown">
       <option value="">Filter by Category</option>
       <option value="fruits">Fruits</option>
       <option value="vegetables">Vegetables</option>
@@ -19,8 +19,8 @@
     </select>
   </div>
 
-  <!-- Table showing pantry ingredients -->
-  <div class="ingredients-scroll-container">
+  <!-- Scrollable Pantry Table -->
+  <div class="pantry-scroll-container">
     <table class="pantry-table">
       <thead>
         <tr>
@@ -48,7 +48,9 @@
 
   <button class="floating-button" (click)="toggleIngredientForm()">+</button>
 
-  <!-- Popup form to add or edit ingredient -->
+
+
+  <!-- Popup Form -->
   <div class="popup" *ngIf="showIngredientForm">
     <form (ngSubmit)="saveIngredient()">
       <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
@@ -64,6 +66,7 @@
         <option value="protein">Protein</option>
         <option value="dairy">Dairy</option>
         <option value="seasonings">Seasonings</option>
+        <option value="substitutions">Substitutions</option>
         <option value="misc">Miscellaneous</option>
       </select>
 
