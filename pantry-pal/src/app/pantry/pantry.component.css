@@ -102,3 +102,132 @@ app-navbar {
   background-color: #719949;
   color: #F8E08E;
 }
+
+/* Popup Form Styling */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the popup */
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px; /* Slightly narrower for a sleeker look */
+  z-index: 1000;
+}
+
+.popup h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* Form container inside the popup */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between form elements */
+}
+
+/* Larger and more visible labels in the popup form */
+.form-container label {
+  font-size: 16px; /* Increased font size */
+  color: #333; /* Darker color for better visibility */
+  margin-bottom: 8px; /* Slightly more space below labels */
+  font-weight: 600; /* Bold for emphasis */
+}
+
+/* Nicer Edit and Delete buttons in the pantry table */
+.pantry-table button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pantry-table button:hover {
+  transform: scale(1.05); /* Slight hover effect */
+}
+
+.pantry-table button:active {
+  transform: scale(0.95); /* Slight click effect */
+}
+
+/* Edit button styling */
+.pantry-table button.edit-button {
+  background-color: #046A38; /* Green to match the theme */
+  color: white;
+  margin-right: 8px; /* Space between buttons */
+}
+
+.pantry-table button.edit-button:hover {
+  background-color: #719949; /* Lighter green on hover */
+}
+
+/* Delete button styling */
+.pantry-table button.delete-button {
+  background-color: #e74c3c; /* Red for delete */
+  color: white;
+}
+
+.pantry-table button.delete-button:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Input fields and select dropdown */
+.form-container input,
+.form-container select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  transition: border-color 0.3s ease;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #046A38;
+  outline: none;
+}
+
+/* Buttons inside the popup */
+.submit-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.submit-row button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-row button[type="submit"] {
+  background-color: #046A38;
+  color: white;
+}
+
+.submit-row button[type="submit"]:hover {
+  background-color: #719949;
+}
+
+.submit-row button[type="button"] {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.submit-row button[type="button"]:hover {
+  background-color: #c0392b;
+}

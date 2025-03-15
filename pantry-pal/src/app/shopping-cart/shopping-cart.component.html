@@ -6,50 +6,50 @@
   <!-- Flex container to show both sections side by side -->
   <div class="shopping-cart-sections">
     <!-- Left section: List of all ingredients added to the app -->
-    <div class="ingredients-list">
-      <h3>All Ingredients</h3>
+<div class="ingredients-list">
+  <h3>All Ingredients</h3>
 
-      <!-- Search and Filter Section -->
-      <div class="search-filter-wrapper">
-        <div class="search-filter-container">
-          <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." (input)="applySearchFilter()" />
-          <select [(ngModel)]="selectedCategory" (change)="applyFilter()">
-            <option value="">Filter by Category</option>
-            <option value="fruits">Fruits</option>
-            <option value="vegetables">Vegetables</option>
-            <option value="grains">Grains</option>
-            <option value="protein">Protein</option>
-            <option value="dairy">Dairy</option>
-            <option value="seasonings">Seasonings</option>
-            <option value="substitutions">Substitutions</option>
-            <option value="misc">Miscellaneous</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="ingredients-scroll-container">
-        <table class="shopping-cart-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ingredient of filteredIngredients; let i = index">
-              <td>{{ ingredient.name }}</td>
-              <td>{{ ingredient.quantity }}</td>
-              <td>{{ ingredient.unit }}</td>
-              <td>
-                <button (click)="addToCart(i)">Add to Cart</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <!-- Search and Filter Section -->
+  <div class="search-filter-wrapper">
+    <div class="search-filter-container">
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." (input)="applySearchFilter()" />
+      <select [(ngModel)]="selectedCategory" (change)="applyFilter()">
+        <option value="">Filter by Category</option>
+        <option value="fruits">Fruits</option>
+        <option value="vegetables">Vegetables</option>
+        <option value="grains">Grains</option>
+        <option value="protein">Protein</option>
+        <option value="dairy">Dairy</option>
+        <option value="seasonings">Seasonings</option>
+        <option value="substitutions">Substitutions</option>
+        <option value="misc">Miscellaneous</option>
+      </select>
     </div>
+  </div>
+
+  <div class="ingredients-scroll-container">
+    <table class="shopping-cart-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingredient of filteredIngredients; let i = index">
+          <td>{{ ingredient.name }}</td>
+          <td>{{ ingredient.quantity }}</td>
+          <td>{{ ingredient.unit }}</td>
+          <td>
+            <button class="add-to-cart-btn" (click)="addToCart(i)">Add to Cart</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <!-- Right section: Current shopping cart -->
     <div class="shopping-cart">
@@ -89,8 +89,8 @@
               <td>{{ item.quantity }}</td>
               <td>{{ item.unit }}</td>
               <td>
-                <button (click)="editItem(i)">Edit</button>
-                <button (click)="removeItem(i)">Remove</button>
+                <button class="edit-button" (click)="editItem(i)">Edit</button>
+                <button class="delete-button" (click)="removeItem(i)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -107,18 +107,20 @@
     <form (ngSubmit)="saveItem()">
       <h2>{{ isEditing ? 'Edit' : 'Add' }} Item</h2>
 
-      <label for="itemName">Name:</label>
-      <input type="text" id="itemName" [(ngModel)]="currentItem.name" name="itemName" required>
+      <div class="form-container">
+        <label for="itemName">Name:</label>
+        <input type="text" id="itemName" [(ngModel)]="currentItem.name" name="itemName" required>
 
-      <label for="itemQuantity">Quantity:</label>
-      <input type="number" id="itemQuantity" [(ngModel)]="currentItem.quantity" name="itemQuantity" required>
+        <label for="itemQuantity">Quantity:</label>
+        <input type="number" id="itemQuantity" [(ngModel)]="currentItem.quantity" name="itemQuantity" required>
 
-      <label for="itemUnit">Unit:</label>
-      <input type="text" id="itemUnit" [(ngModel)]="currentItem.unit" name="itemUnit">
+        <label for="itemUnit">Unit:</label>
+        <input type="text" id="itemUnit" [(ngModel)]="currentItem.unit" name="itemUnit">
+      </div>
 
       <div class="submit-row">
-        <button type="submit">{{ isEditing ? 'Save' : 'Add' }} Item</button>
         <button type="button" (click)="toggleItemForm()">Cancel</button>
+        <button type="submit">{{ isEditing ? 'Save' : 'Add' }} Item</button>
       </div>
     </form>
   </div>

@@ -79,24 +79,61 @@
 .view-btn,
 .edit-btn,
 .delete-btn,
-.share-btn { /* Added styling for Share button */
+.share-btn {
   padding: 8px 16px;
-  background-color: #046A38;
-  color: #fff;
   font-size: 14px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin: 5px;
+  transition: background-color 0.3s ease;
 }
 
+/* View button styling */
+.view-btn {
+  background-color: #046A38; /* Green */
+  color: #fff;
+}
+
+.view-btn:hover {
+  background-color: #719949; /* Lighter green */
+}
+
+/* Edit button styling */
+.edit-btn {
+  background-color: #046A38; /* Green */
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background-color: #719949; /* Lighter green */
+}
+
+/* Delete button styling */
+.delete-btn {
+  background-color: #e74c3c; /* Red */
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b; /* Darker red */
+}
+
+/* Share button styling */
+.share-btn {
+  background-color: #3498db; /* Blue */
+  color: #fff;
+}
+
+.share-btn:hover {
+  background-color: #2980b9; /* Darker blue */
+}
 .view-btn:hover,
 .edit-btn:hover,
 .delete-btn:hover,
 .share-btn:hover { /* Added hover effect for Share button */
   background-color: #719949;
 }
-
 
 /* Floating button to add new recipe */
 .floating-button {
@@ -127,11 +164,12 @@
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   max-height: 80vh;
   overflow-y: auto;
-  width: 80%;
-  max-width: 400px;
+  width: 90%;
+  max-width: 500px; /* Slightly wider for better readability */
+  z-index: 1000;
 }
 
 .popup-content {
@@ -139,7 +177,6 @@
   text-align: left;
 }
 
-/* Popup form for adding or editing a recipe */
 .popup-content h2 {
   font-size: 24px;
   color: #046A38;
@@ -154,7 +191,7 @@
 .popup-content input,
 .popup-content textarea {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   margin-top: 5px;
   font-size: 16px;
   border-radius: 5px;
@@ -179,4 +216,125 @@
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+}
+
+/* Popup form for adding or editing a recipe */
+.popup form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between form elements */
+}
+
+.popup form h2 {
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.popup form label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.popup form input,
+.popup form textarea,
+.popup form select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.popup form input:focus,
+.popup form textarea:focus,
+.popup form select:focus {
+  border-color: #046A38;
+  outline: none;
+}
+
+.popup form .ingredient-form {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.popup form .ingredient-form h3 {
+  font-size: 16px;
+  color: #046A38;
+  margin-bottom: 10px;
+}
+
+.popup form .add-ingredient-btn {
+  background-color: #046A38;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.popup form .add-ingredient-btn:hover {
+  background-color: #719949;
+}
+
+.popup form .slider-group {
+  margin-bottom: 15px;
+}
+
+.popup form .slider-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.popup form .slider-group input[type="range"] {
+  width: 100%;
+}
+
+.popup form .slider-group span {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.popup form .submit-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.popup form .submit-row button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup form .submit-row button[type="submit"] {
+  background-color: #046A38;
+  color: white;
+}
+
+.popup form .submit-row button[type="submit"]:hover {
+  background-color: #719949;
+}
+
+.popup form .submit-row button[type="button"] {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.popup form .submit-row button[type="button"]:hover {
+  background-color: #c0392b;
 }
