@@ -2,72 +2,21 @@
 
 <div class="Ingredients">
     <div class="sections-container">
-        <div class="section" id="fruits-section">
-            <h2>Fruits</h2>
-            <div class="grid-container" id="fruits">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['fruits']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
+      <div *ngFor="let category of categories" class="section">
+        <h2>{{ category | titlecase }}</h2>
+        <div class="grid-container">
+          <div class="ingredient-box" *ngFor="let ingredient of groupedPantry[category]">
+            {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
+          </div>
+          <div class="ingredient-box empty" *ngIf="groupedPantry[category].length === 0">
+            No ingredients in this category.
+          </div>
         </div>
-        <div class="section" id="vegetables-section">
-            <h2>Vegetables</h2>
-            <div class="grid-container" id="vegetables">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['vegetables']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
-        <div class="section" id="grains-section">
-            <h2>Grains</h2>
-            <div class="grid-container" id="grains">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['grains']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
-        <div class="section" id="protein-section">
-            <h2>Protein</h2>
-            <div class="grid-container" id="protein">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['protein']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
-        <div class="section" id="dairy-section">
-            <h2>Dairy</h2>
-            <div class="grid-container" id="dairy">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['dairy']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
-        <div class="section" id="seasoning-section">
-            <h2>Seasonings</h2>
-            <div class="grid-container" id="seasonings">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['season']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
-        <div class="section" id="subsitute-section">
-            <h2>Substitutions</h2>
-            <div class="grid-container" id="substitutions">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['sub']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
-        <div class="section" id="misc-section">
-            <h2>Misc.</h2>
-            <div class="grid-container" id="misc">
-                <div class="ingredient-box" *ngFor="let ingredient of ingredients['misc']">
-                    {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-</div>
+  </div>
+  
+    
 
 <button class="floating-button" (click)="toggleFoodForm()">+</button>
 
@@ -76,26 +25,20 @@
         <h2>Add an Ingredient</h2>
 
         <div class="input-row">
-            <label for="foodName">Name:</label>
-            <input type="text" id="foodName" [(ngModel)]="newIngredient.name" name="foodName" required>
-            
-            <label for="foodType"> Type:</label>
-            <select id="foodType" [(ngModel)]="newIngredient.type" name="foodType">
-                <option value="fruits">Fruits</option>
-                <option value="vegetables">Vegetables</option>
-                <option value="grains">Grains</option>
-                <option value="protein">Protein</option>
-                <option value="dairy">Dairy</option>
-                <option value="season">Seasoning</option>
-                <option value="sub">Substitution</option>
-                <option value="misc">Misc.</option>
+            <label for="foodName">Ingredient:</label>
+            <select id="foodName" [(ngModel)]="newIngredient.name" (change)="updateIngredientDetails()" name="foodName" required>
+                <option *ngFor="let ingredient of ingredientList" [value]="ingredient.name">{{ ingredient.name }}</option>
             </select>
 
-            <label for="foodQuantity"> Quantity:</label>
+            <label for="foodQuantity">Quantity:</label>
             <input type="number" id="foodQuantity" [(ngModel)]="newIngredient.quantity" name="foodQuantity" min="1" required>
-            
-            <label for="unitType"> Measurment:</label>
-            <input type="text" id="unitType" [(ngModel)]="newIngredient.unit" name="unitType">
+
+            <label for="foodType">Category:</label>
+            <input type="text" id="foodType" [(ngModel)]="newIngredient.type" name="foodType" readonly>
+
+            <label for="unitType">Unit:</label>
+            <input type="text" id="unitType" [(ngModel)]="newIngredient.unit" name="unitType" readonly>
+
         </div>
 
         <div class="submit-row">

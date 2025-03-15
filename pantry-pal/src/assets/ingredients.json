@@ -1,0 +1,10 @@
+{
+    "ingredients": [
+      { "name": "Apple", "type": "fruits", "defaultUnit": "individual" },
+      { "name": "Carrot", "type": "vegetables", "defaultUnit": "individual" },
+      { "name": "Flour", "type": "grains", "defaultUnit": "cup" },
+      { "name": "Chicken Breast", "type": "protein", "defaultUnit": "lb" },
+      { "name": "Milk", "type": "dairy", "defaultUnit": "cup" },
+      { "name": "Salt", "type": "season", "defaultUnit": "tsp" }
+    ]
+}  

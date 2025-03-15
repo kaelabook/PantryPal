@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from "../navbar/navbar.component";
-import { NgIf, NgFor} from '@angular/common';
+import { NgIf, NgFor, CommonModule} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -8,16 +8,12 @@ import { FormsModule } from '@angular/forms';
   	standalone: true,
   	templateUrl: './pantry.component.html',
   	styleUrl: './pantry.component.css',
-	imports: [NavbarComponent, NgIf, NgFor, FormsModule]
+	imports: [NavbarComponent, NgIf, NgFor, FormsModule, CommonModule],
 })
 
 export class PantryComponent {
 	showPopup = false;
-	newIngredient = { name: '', quantity: 1, unit: '', type: 'misc' };
-	ingredients: { [key: string]: { name: string; quantity: number; unit: string }[] } = {
-		fruits: [], vegetables: [], grains: [], protein: [], dairy: [], season: [], sub: [], misc: []
-	};
-
+	//switch between showing and closing the popup for adding an ingredient
 	toggleFoodForm() {
 		if (this.showPopup == true){
 			this.showPopup = false;
@@ -25,18 +21,67 @@ export class PantryComponent {
 			this.showPopup = true;
 		}
 	}
-  
-	addIngredient() {
-		if (this.newIngredient.name.trim() && this.newIngredient.quantity > 0) {
-			const ingredientToAdd = { 
-		  		name: this.newIngredient.name, 
-		  		quantity: this.newIngredient.quantity, 
-		  		unit: (this.newIngredient.unit.trim() || '')
-			};
 
-			this.ingredients[this.newIngredient.type].push(ingredientToAdd);
+	get categories(): string[] {
+		return Object.keys(this.groupedPantry);
+	}	  
+
+	//store possible ingredients to choose from
+	ingredientList: any[] = [];
+	//store added ingredients
+	groupedPantry: { [key:string]: any[] } = {
+		fruits: [],
+		vegetables: [],
+		grains: [],
+		protein: [],
+		dairy: [],
+		seasoning: [],
+		misc: []
+	};
+	newIngredient = {name: '', type: '', unit: '', quantity: 1};
+	
+	ngOnInit(): void {
+		this.loadIngredients();
+	}
+
+	async loadIngredients(): Promise<void>{
+		try{
+			const response = await fetch('assets/ingredients.json');
+			if (!response.ok) throw new Error('Failed to load ingredients.json');
 			
-			this.newIngredient = { name: '', quantity: 1, unit: '', type: 'misc' };
+			const data = await response.json();
+			console.log('Loaded Ingredients:', data); // Debugging output
+			this.ingredientList = data.ingredients;
+
+			if (!this.ingredientList || this.ingredientList.length === 0) {
+				console.warn('No ingredients found');
+			}
+		} catch (error) {
+			console.error('Error loading ingredients:', error);
+		}
+	}
+
+	updateIngredientDetails(): void{
+		const selectedIngredient = this.ingredientList.find(i => i.name === this.newIngredient.name)
+		if (selectedIngredient){
+			this.newIngredient.type = selectedIngredient.type;
+			this.newIngredient.unit = selectedIngredient.defaultUnit;
+		}
+	}
+
+	addIngredient() {
+		if (this.newIngredient.name && this.newIngredient.quantity > 0) {
+
+			const ingredientToAdd = { ...this.newIngredient };			
+			if(!this.groupedPantry[ingredientToAdd.type]){
+				this.groupedPantry[ingredientToAdd.type] = [];
+			}
+
+			//add the new ingredient to the specified section
+			this.groupedPantry[ingredientToAdd.type].push(ingredientToAdd)
+			
+			//reset newIngredient for next input
+			this.newIngredient = { name: '', type: '', unit: '', quantity: 1};
 			this.showPopup = false;
 		}
 	}	
