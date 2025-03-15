@@ -1,133 +1,134 @@
 import { Component } from '@angular/core';
-import { NavbarComponent } from "../navbar/navbar.component";
-import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { NavbarComponent } from '../navbar/navbar.component';
+
+interface Ingredient {
+  name: string;
+  quantity: number;
+  unit: string;
+  category: string;
+}
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [NavbarComponent, NgIf, NgFor, FormsModule],
+  imports: [NavbarComponent, FormsModule, NgFor, NgIf],
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.css']
 })
 export class ShoppingCartComponent {
-  showItemForm = false;
-  isEditing = false;
-  currentItem = { name: '', quantity: 1, unit: '' };
-  
-  // All ingredients added to the web app (the pantry)
-  allIngredients = [
-    { name: 'Apple', category: 'fruits', quantity: 10, unit: 'pieces' },
-    { name: 'Tomato', category: 'vegetables', quantity: 5, unit: 'pieces' },
-    { name: 'Rice', category: 'grains', quantity: 2, unit: 'kg' },
-    { name: 'Chicken', category: 'protein', quantity: 1, unit: 'kg' },
-    { name: 'Milk', category: 'dairy', quantity: 1, unit: 'liter' },
-    { name: 'Banana', category: 'fruits', quantity: 6, unit: 'pieces' },
-    { name: 'Carrot', category: 'vegetables', quantity: 4, unit: 'pieces' },
-    { name: 'Cucumber', category: 'vegetables', quantity: 3, unit: 'pieces' },
-    { name: 'Lettuce', category: 'vegetables', quantity: 1, unit: 'head' },
-    { name: 'Spinach', category: 'vegetables', quantity: 2, unit: 'bunches' },
-    { name: 'Eggplant', category: 'vegetables', quantity: 2, unit: 'pieces' },
-    { name: 'Potato', category: 'vegetables', quantity: 10, unit: 'pieces' },
-    { name: 'Onion', category: 'vegetables', quantity: 5, unit: 'pieces' },
-    { name: 'Garlic', category: 'vegetables', quantity: 2, unit: 'heads' },
-    { name: 'Olive Oil', category: 'seasonings', quantity: 1, unit: 'liter' },
-    { name: 'Soy Sauce', category: 'seasonings', quantity: 1, unit: 'liter' },
-    { name: 'Sugar', category: 'misc', quantity: 2, unit: 'kg' },
-    { name: 'Flour', category: 'misc', quantity: 3, unit: 'kg' },
-    { name: 'Salt', category: 'seasonings', quantity: 1, unit: 'kg' },
-    { name: 'Pepper', category: 'seasonings', quantity: 1, unit: 'kg' },
-    { name: 'Chili', category: 'seasonings', quantity: 50, unit: 'grams' },
-    { name: 'Oregano', category: 'seasonings', quantity: 1, unit: 'bag' },
-    { name: 'Basil', category: 'seasonings', quantity: 1, unit: 'bunch' },
-    { name: 'Chicken Broth', category: 'misc', quantity: 2, unit: 'liters' },
-    { name: 'Beef', category: 'protein', quantity: 1, unit: 'kg' },
-    { name: 'Pork', category: 'protein', quantity: 1, unit: 'kg' },
-    { name: 'Fish', category: 'protein', quantity: 1, unit: 'kg' },
-    { name: 'Butter', category: 'dairy', quantity: 500, unit: 'grams' },
-    { name: 'Cheese', category: 'dairy', quantity: 1, unit: 'kg' },
-    { name: 'Yogurt', category: 'dairy', quantity: 1, unit: 'liter' },
-    { name: 'Juice', category: 'misc', quantity: 2, unit: 'liters' },
+  searchQuery: string = ''; // Search query for the ingredients list
+  selectedCategory: string = ''; // Selected category filter for the ingredients list
+  cartSearchQuery: string = ''; // Search query for the shopping cart
+  selectedCartCategory: string = ''; // Selected category filter for the shopping cart
+
+  showItemForm: boolean = false; // Tracks the visibility of the item form
+  isEditing: boolean = false; // Tracks whether we're editing or adding an item
+  currentItem: Ingredient = { name: '', quantity: 0, unit: '', category: '' };
+
+  // Sample ingredients data (added more items for both the left and right boxes)
+  ingredients: Ingredient[] = [
+    { name: 'Apple', quantity: 5, unit: 'pcs', category: 'fruits' },
+    { name: 'Carrot', quantity: 3, unit: 'pcs', category: 'vegetables' },
+    { name: 'Rice', quantity: 2, unit: 'kg', category: 'grains' },
+    { name: 'Chicken Breast', quantity: 1, unit: 'kg', category: 'protein' },
+    { name: 'Milk', quantity: 2, unit: 'L', category: 'dairy' },
+    { name: 'Salt', quantity: 1, unit: 'packet', category: 'seasonings' },
+    { name: 'Banana', quantity: 6, unit: 'pcs', category: 'fruits' },
+    { name: 'Broccoli', quantity: 2, unit: 'pcs', category: 'vegetables' },
+    { name: 'Olive Oil', quantity: 1, unit: 'L', category: 'seasonings' },
+    { name: 'Beef', quantity: 3, unit: 'kg', category: 'protein' },
+    { name: 'Cheese', quantity: 1, unit: 'kg', category: 'dairy' },
+    { name: 'Oats', quantity: 1, unit: 'kg', category: 'grains' }
   ];
 
-  // Current shopping cart (items that need to be purchased)
-  shoppingCart = [
-    { name: 'Apple', quantity: 2, unit: 'pieces' },
-    { name: 'Tomato', quantity: 1, unit: 'pieces' },
+  // Shopping cart items (add more items for the cart too)
+  shoppingCart: Ingredient[] = [
+    { name: 'Apple', quantity: 3, unit: 'pcs', category: 'fruits' },
+    { name: 'Chicken Breast', quantity: 1, unit: 'kg', category: 'protein' }
   ];
 
-  // Variables for search and filter functionality
-  searchQuery = '';
-  selectedCategory = '';
-  filteredIngredients = [...this.allIngredients];
-
-  toggleItemForm() {
-    this.showItemForm = !this.showItemForm;
-    if (!this.showItemForm) {
-      this.resetForm();
-    }
-  }
-
-  saveItem() {
-    if (this.isEditing) {
-      const index = this.shoppingCart.findIndex(item => item.name === this.currentItem.name);
-      if (index !== -1) {
-        this.shoppingCart[index] = this.currentItem;
-      }
-    } else {
-      this.shoppingCart.push({ ...this.currentItem });
-    }
-    this.toggleItemForm();
-  }
-
-  editItem(index: number) {
-    this.isEditing = true;
-    this.currentItem = { ...this.shoppingCart[index] };
-    this.showItemForm = true;
-  }
-
-  removeItem(index: number) {
-    this.shoppingCart.splice(index, 1);
-  }
-
-  // Add an ingredient to the shopping cart
-  addToCart(index: number) {
-    const ingredient = this.allIngredients[index];
-    // Check if the ingredient is already in the shopping cart
-    const existingItemIndex = this.shoppingCart.findIndex(item => item.name === ingredient.name);
-    if (existingItemIndex !== -1) {
-      // If it exists, update the quantity
-      this.shoppingCart[existingItemIndex].quantity += ingredient.quantity;
-    } else {
-      // If it's not in the cart, add it
-      this.shoppingCart.push({ ...ingredient });
-    }
-  }
-
-  // Handle checkout (clear the shopping cart)
-  checkout() {
-    console.log('Checking out:', this.shoppingCart);
-    // Clear the shopping cart
-    this.shoppingCart = [];
-  }
-
-  resetForm() {
-    this.isEditing = false;
-    this.currentItem = { name: '', quantity: 1, unit: '' };
-  }
-
-  // Apply search filter based on the search query
-  applySearchFilter() {
-    this.filteredIngredients = this.allIngredients.filter(ingredient =>
+  // Filtered ingredients based on search and category
+  get filteredIngredients(): Ingredient[] {
+    return this.ingredients.filter(ingredient =>
+      (this.selectedCategory === '' || ingredient.category === this.selectedCategory) &&
       ingredient.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
-  // Apply category filter based on selected category
-  applyFilter() {
-    this.filteredIngredients = this.allIngredients.filter(ingredient =>
-      (this.selectedCategory ? ingredient.category === this.selectedCategory : true) &&
-      (this.searchQuery ? ingredient.name.toLowerCase().includes(this.searchQuery.toLowerCase()) : true)
+  // Filtered items in the shopping cart based on search and category
+  get filteredCartItems(): Ingredient[] {
+    return this.shoppingCart.filter(item =>
+      (this.selectedCartCategory === '' || item.category === this.selectedCartCategory) &&
+      item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase())
     );
+  }
+
+  // Add an ingredient to the shopping cart
+  addToCart(index: number) {
+    const item = this.ingredients[index];
+    this.shoppingCart.push({ ...item });
+  }
+
+  // Remove an item from the shopping cart
+  removeItem(index: number) {
+    this.shoppingCart.splice(index, 1);
+  }
+
+  // Edit an item in the shopping cart (you can expand this functionality)
+  editItem(index: number) {
+    const item = this.shoppingCart[index];
+    this.isEditing = true;
+    this.currentItem = { ...item };
+    this.showItemForm = true; // Show the form when editing
+  }
+
+  // Checkout function (currently logs the cart and clears it)
+  checkout() {
+    console.log('Checking out:', this.shoppingCart);
+    this.shoppingCart = [];
+  }
+
+  // Toggle the form for adding/editing items
+  toggleItemForm() {
+    this.showItemForm = !this.showItemForm;
+    this.isEditing = false; // Reset editing flag when toggling off the form
+    this.currentItem = { name: '', quantity: 0, unit: '', category: '' }; // Reset current item
+  }
+
+  // Apply search filter to ingredients
+  applySearchFilter() {
+    // Automatically updates filteredIngredients based on searchQuery
+  }
+
+  // Apply category filter to ingredients
+  applyFilter() {
+    // Automatically updates filteredIngredients based on selectedCategory
+  }
+
+  // Apply search filter to shopping cart
+  applyCartSearchFilter() {
+    // Automatically updates filteredCartItems based on cartSearchQuery
+  }
+
+  // Apply category filter to shopping cart
+  applyCartFilter() {
+    // Automatically updates filteredCartItems based on selectedCartCategory
+  }
+
+  // Save the item (either adding or editing)
+  saveItem() {
+    if (this.isEditing) {
+      // Update the item in the shopping cart
+      const index = this.shoppingCart.findIndex(item => item.name === this.currentItem.name);
+      if (index !== -1) {
+        this.shoppingCart[index] = { ...this.currentItem };
+      }
+    } else {
+      // Add a new item to the shopping cart
+      this.shoppingCart.push({ ...this.currentItem });
+    }
+    this.toggleItemForm(); // Close the form after saving
   }
 }

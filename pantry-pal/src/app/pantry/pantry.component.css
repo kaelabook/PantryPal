@@ -1,4 +1,4 @@
-/* Make sure the navbar is always visible */
+/* Ensure the navbar is always visible */
 app-navbar {
   position: fixed;
   top: 0;
@@ -11,16 +11,17 @@ app-navbar {
 .pantry-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px); /* Subtract navbar height */
-  padding: 20px;
-  margin-top: 80px; /* Prevent overlap with fixed navbar */
+  height: calc(100vh - 120px); /* Adjust the height to leave room for the navbar */
+  padding-top: 100px; /* Adjust space for the navbar to avoid overlap */
+  padding-bottom: 60px; /* Space for the floating button */
+  overflow-y: hidden; /* Prevent page scrolling */
   align-items: center; /* Center contents */
 }
 
 /* Centered Page Heading */
 .center-heading {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Space between title and content */
 }
 
 /* Search & Filter Layout */
@@ -55,9 +56,12 @@ app-navbar {
   overflow-y: auto; /* Enables scrolling within the container */
   width: 90%; /* Ensures table stays within viewport */
   max-width: 1000px; /* Prevents excessive stretching */
+  border: 1px solid red; /* Thinner red outline around the pantry table */
+  border-radius: 10px; /* Rounded corners */
+  padding: 15px; /* Padding inside the box */
 }
 
-/* Pantry Table */
+/* Pantry Table with red outline and rounded corners */
 .pantry-table {
   width: 100%;
   border-collapse: collapse;
@@ -65,7 +69,7 @@ app-navbar {
 }
 
 .pantry-table th, .pantry-table td {
-  padding: 10px;
+  padding: 12px 15px; /* More padding for better spacing */
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
@@ -82,7 +86,7 @@ app-navbar {
 /* Floating Button */
 .floating-button {
   position: fixed;
-  bottom: 20px;
+  bottom: 60px; /* Space for the floating button */
   right: 20px;
   width: 60px;
   height: 60px;

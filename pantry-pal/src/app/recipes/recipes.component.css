@@ -1,65 +1,104 @@
-/* Recipes container */
+/* Ensure the recipes container is properly structured */
 .recipes-container {
-  padding: 20px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Grid layout for recipe cards */
-.recipes-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.recipe-card {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border: 1px solid #CBA052;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  align-items: center; /* Center the content */
 }
 
+/* Title for the Recipes Page (consistent with 'Your Pantry') */
+.center-heading {
+  text-align: center;
+  margin-bottom: 20px; /* Space between title and grid */
+  font-size: 28px; /* Same font size as 'Your Pantry' title */
+  color: #046A38; /* Consistent with 'Your Pantry' color */
+}
+
+/* Grid Layout for Recipes */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-rows: repeat(2, 1fr); /* 2 rows */
+  gap: 20px; /* Space between items */
+  width: 90%;
+  max-width: 1200px; /* Prevents excessive stretching */
+  margin-bottom: 20px; /* Space below the grid */
+  overflow-y: auto; /* Scrolling if there are more than 6 recipes */
+  max-height: calc(100vh - 160px); /* Ensures the grid fits without scrolling the page */
+}
+
+/* Recipe Item */
+.recipe-card {
+  background-color: #F2F1F0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center; /* Center content inside the card */
+  border: 1px solid red; /* Red outline around the recipe card */
+}
+
+/* Title and description of recipe */
 .recipe-card h3 {
-  font-size: 1.2em;
+  font-size: 24px;
+  color: #046A38;
   margin-bottom: 10px;
 }
 
-.recipe-description {
-  font-size: 0.9em;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.ingredients-list {
-  font-size: 0.9em;
+.recipe-card p {
+  color: #333;
+  font-size: 16px;
   margin-bottom: 15px;
 }
 
+/* Styling for the ingredients list in recipe card */
+.recipe-card .ingredients-list {
+  text-align: left; /* Align ingredients text to the left */
+  margin-bottom: 15px;
+}
+
+.recipe-card .ingredients-list ul {
+  padding-left: 20px;
+}
+
+.recipe-card .ingredients-list li {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Buttons for View, Edit, and Delete (side by side at the bottom) */
 .button-group {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Align buttons side by side */
+  width: 100%;
+  margin-top: auto; /* Align buttons at the bottom of the card */
 }
 
-.button-group button {
-  margin-top: 10px;
+.view-btn,
+.edit-btn,
+.delete-btn {
   padding: 8px 16px;
-  background-color: #46a049;
+  background-color: #046A38;
+  color: #fff;
+  font-size: 14px;
   border: none;
-  color: white;
-  cursor: pointer;
   border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
 }
 
-.button-group button:hover {
-  background-color: #3d8c3d;
+.view-btn:hover,
+.edit-btn:hover,
+.delete-btn:hover {
+  background-color: #719949;
 }
 
-/* Floating button */
+/* Floating button to add new recipe */
 .floating-button {
   position: fixed;
-  bottom: 20px;
+  bottom: 60px;
   right: 20px;
   width: 60px;
   height: 60px;
@@ -76,105 +115,65 @@
   color: #F8E08E;
 }
 
+/* Popup for Viewing Recipe Details */
 .popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
-  padding: 40px;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
   max-height: 80vh;
   overflow-y: auto;
   width: 80%;
+  max-width: 400px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+.popup-content {
+  margin-top: 20px;
+  text-align: left;
 }
 
-label {
+/* Popup form for adding or editing a recipe */
+.popup-content h2 {
+  font-size: 24px;
+  color: #046A38;
+  margin-bottom: 10px;
+}
+
+.popup-content label {
   margin-top: 10px;
+  font-size: 16px;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="range"],
-textarea {
+.popup-content input,
+.popup-content textarea {
   width: 100%;
-  padding: 12px;
-  margin: 5px 0;
-  border: 1px solid #CBA052;
+  padding: 8px;
+  margin-top: 5px;
+  font-size: 16px;
   border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-textarea {
-  height: 100px;
-  resize: none;
-}
-
-.slider-group {
+.popup-content button {
   margin-top: 15px;
-}
-
-button {
-  margin-top: 10px;
-}
-
-.add-ingredient-btn {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.instructions-section {
-  margin-top: 20px;
-}
-
-.instructions-section label {
-  margin-top: 15px;
-  display: block;
-}
-
-.submit-row {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .recipes-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .recipes-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-
-/* Larger and green buttons for Save and Cancel */
-.submit-row button {
-  padding: 12px 24px; /* Make buttons larger */
-  background-color: #46a049; /* Green color */
-  color: white;
+  padding: 10px;
+  background-color: #046A38;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 5px;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px; /* Larger text */
 }
 
-.submit-row button:hover {
-  background-color: #3d8c3d; /* Darker green on hover */
+.popup-content button:hover {
+  background-color: #719949;
 }
 
-.submit-row button[type="button"] {
-  background-color: #f44336; /* Red color for Cancel button */
-}
-
-.submit-row button[type="button"]:hover {
-  background-color: #d32f2f; /* Darker red on hover */
+.popup-content .submit-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
