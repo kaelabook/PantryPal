@@ -1,0 +1,104 @@
+/* Ensure the navbar is always visible */
+app-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Pantry container fills viewport but doesn't scroll past navbar */
+.pantry-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px); /* Adjust the height to leave room for the navbar */
+  padding-top: 100px; /* Adjust space for the navbar to avoid overlap */
+  padding-bottom: 60px; /* Space for the floating button */
+  overflow-y: hidden; /* Prevent page scrolling */
+  align-items: center; /* Center contents */
+}
+
+/* Centered Page Heading */
+.center-heading {
+  text-align: center;
+  margin-bottom: 20px; /* Space between title and content */
+}
+
+/* Search & Filter Layout */
+.search-filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Fixed Width Search Bar */
+.search-bar {
+  width: 200px; /* Fixed reasonable width */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: left; /* Ensures normal text input behavior */
+}
+
+/* Fixed Width Filter Dropdown */
+.filter-dropdown {
+  width: 160px; /* Small but readable */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Pantry Table Container - Ensures it fits the screen */
+.pantry-scroll-container {
+  flex-grow: 1;
+  overflow-y: auto; /* Enables scrolling within the container */
+  width: 90%; /* Ensures table stays within viewport */
+  max-width: 1000px; /* Prevents excessive stretching */
+  border: 1px solid red; /* Thinner red outline around the pantry table */
+  border-radius: 10px; /* Rounded corners */
+  padding: 15px; /* Padding inside the box */
+}
+
+/* Pantry Table with red outline and rounded corners */
+.pantry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.pantry-table th, .pantry-table td {
+  padding: 12px 15px; /* More padding for better spacing */
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.pantry-table th {
+  background-color: #046A38;
+  color: white;
+}
+
+.pantry-table td {
+  background-color: #f9f9f9;
+}
+
+/* Floating Button */
+.floating-button {
+  position: fixed;
+  bottom: 60px; /* Space for the floating button */
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #046A38;
+  color: #E7E3C6;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.floating-button:hover {
+  background-color: #719949;
+  color: #F8E08E;
+}

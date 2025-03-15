@@ -1,0 +1,94 @@
+.home-container {
+  text-align: center;
+  margin-top: 50px; /* Move the content slightly higher */
+  padding: 20px;
+}
+
+/* Info Box with red outline around the description and buttons */
+.info-box {
+  background-color: #F2F1F0;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+  margin-bottom: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid red; /* Thinner red outline around the info box */
+}
+
+.title {
+  font-size: 36px; /* Make the title larger */
+  color: #046A38;
+  margin-bottom: 20px; /* Add some space between title and text */
+}
+
+.info-box p {
+  color: #333;
+  font-size: 18px;
+}
+
+/* Buttons for Login and Signup */
+.auth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.auth-btn {
+  padding: 12px 24px;
+  background-color: #046A38;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auth-btn:hover {
+  background-color: #719949;
+}
+
+/* Popup styling */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+  max-height: 80vh;
+  overflow-y: auto;
+  width: 80%;
+  max-width: 400px;
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px;
+  background-color: #046A38;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #719949;
+}
