@@ -68,7 +68,7 @@
   color: #333;
 }
 
-/* Buttons for View, Edit, and Delete (side by side at the bottom) */
+/* Buttons for View, Edit, Delete, and Share (side by side at the bottom) */
 .button-group {
   display: flex;
   justify-content: space-between; /* Align buttons side by side */
@@ -78,7 +78,8 @@
 
 .view-btn,
 .edit-btn,
-.delete-btn {
+.delete-btn,
+.share-btn { /* Added styling for Share button */
   padding: 8px 16px;
   background-color: #046A38;
   color: #fff;
@@ -91,9 +92,11 @@
 
 .view-btn:hover,
 .edit-btn:hover,
-.delete-btn:hover {
+.delete-btn:hover,
+.share-btn:hover { /* Added hover effect for Share button */
   background-color: #719949;
 }
+
 
 /* Floating button to add new recipe */
 .floating-button {

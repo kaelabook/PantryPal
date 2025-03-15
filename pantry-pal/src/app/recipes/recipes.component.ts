@@ -85,6 +85,12 @@ export class RecipesComponent {
     if (!this.showRecipeForm) this.resetForm();
   }
 
+  // Share function (placeholder for future functionality)
+  shareRecipe(recipe: any) {
+    console.log('Sharing recipe:', recipe);  // Placeholder action
+    // You can implement the actual share functionality here
+  }
+
   viewRecipe(recipe: Recipe) {
     this.selectedRecipe = recipe;
   }
