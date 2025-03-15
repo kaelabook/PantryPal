@@ -1,0 +1,95 @@
+.recipes-container {
+    padding: 20px;
+  }
+  
+  .recipe-item {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #CBA052;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ingredient-form {
+    margin-top: 10px;
+  }
+  
+  .floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #046A38;
+    color: #E7E3C6;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .floating-button:hover {
+    background-color: #719949;
+    color: #F8E08E;
+  }
+  
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 80%;
+  }
+  
+  .submit-row {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  #recipeName, #recipeDescription, #recipeInstructions {
+    width: 100%;
+  }
+  
+  textarea {
+    height: 100px;
+  }
+  
+  input[type="range"] {
+    width: 100%;
+  }
+  
+  .slider-group {
+    margin-top: 15px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+  
+  .add-ingredient-btn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .ingredient-form button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .instructions-section {
+    margin-top: 20px;
+  }
+  
+  .instructions-section label {
+    margin-top: 15px;
+    display: block;
+  }
+  

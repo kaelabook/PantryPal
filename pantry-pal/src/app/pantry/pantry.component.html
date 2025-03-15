@@ -1,8 +1,83 @@
 <app-navbar></app-navbar>
-<div class="Ingredients">
-    <div class="Fruits">fruit</div>
-    <div class="Vegetables">vegetable</div>
-    <div class="Grains">grain</div>
-    <div class="Protein">protein</div>
-    <div class="Dairy">dairy</div>
+
+<div class="pantry-container">
+  <h2 class="center-heading">Your Pantry</h2>
+
+  <!-- Search and Filter Section -->
+  <div class="search-filter-container">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." (input)="applySearchFilter()" />
+    <select [(ngModel)]="selectedCategory" (change)="applyFilter()">
+      <option value="">Filter by Category</option>
+      <option value="fruits">Fruits</option>
+      <option value="vegetables">Vegetables</option>
+      <option value="grains">Grains</option>
+      <option value="protein">Protein</option>
+      <option value="dairy">Dairy</option>
+      <option value="seasonings">Seasonings</option>
+      <option value="substitutions">Substitutions</option>
+      <option value="misc">Miscellaneous</option>
+    </select>
+  </div>
+
+  <!-- Table showing pantry ingredients -->
+  <div class="ingredients-scroll-container">
+    <table class="pantry-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingredient of filteredIngredients; let i = index">
+          <td>{{ ingredient.name }}</td>
+          <td>{{ ingredient.category }}</td>
+          <td>{{ ingredient.quantity }}</td>
+          <td>{{ ingredient.unit }}</td>
+          <td>
+            <button (click)="editIngredient(i)">Edit</button>
+            <button (click)="removeIngredient(i)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="floating-button" (click)="toggleIngredientForm()">+</button>
+
+  <!-- Popup form to add or edit ingredient -->
+  <div class="popup" *ngIf="showIngredientForm">
+    <form (ngSubmit)="saveIngredient()">
+      <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
+
+      <label for="ingredientName">Name:</label>
+      <input type="text" id="ingredientName" [(ngModel)]="currentIngredient.name" name="ingredientName" required>
+
+      <label for="ingredientCategory">Category:</label>
+      <select id="ingredientCategory" [(ngModel)]="currentIngredient.category" name="ingredientCategory" required>
+        <option value="fruits">Fruits</option>
+        <option value="vegetables">Vegetables</option>
+        <option value="grains">Grains</option>
+        <option value="protein">Protein</option>
+        <option value="dairy">Dairy</option>
+        <option value="seasonings">Seasonings</option>
+        <option value="substitutions">Substitutions</option>
+        <option value="misc">Miscellaneous</option>
+      </select>
+
+      <label for="ingredientQuantity">Quantity:</label>
+      <input type="number" id="ingredientQuantity" [(ngModel)]="currentIngredient.quantity" name="ingredientQuantity" required>
+
+      <label for="ingredientUnit">Unit:</label>
+      <input type="text" id="ingredientUnit" [(ngModel)]="currentIngredient.unit" name="ingredientUnit">
+
+      <div class="submit-row">
+        <button type="submit">{{ isEditing ? 'Save' : 'Add' }} Ingredient</button>
+        <button type="button" (click)="toggleIngredientForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>

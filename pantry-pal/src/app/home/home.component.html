@@ -1,14 +1,12 @@
 <app-navbar></app-navbar>
-<section>
-    <span class="overview">
-        <ng-container *ngIf="tables.length > 0; else placeholder">
-            <button *ngFor="let table of tables" class="table">
-                {{ table.tableId }}
-            </button>
-        </ng-container>
-        <ng-template #placeholder>
-            <button class="table">1</button>
-            <button class="table">+</button>
-        </ng-template>
-    </span>
+
+<section class="home-container">
+  <div class="home-content">
+    <h1>Welcome to PantryPal!</h1>
+    <p>Your ultimate kitchen assistant for managing pantry inventory, recipes, and shopping lists.</p>
+    <p>Keep track of your ingredients, create recipes, and automatically generate shopping carts for missing ingredients. All at your fingertips.</p>
+    <p>Start managing your pantry today and never run out of ingredients again!</p>
+
+    <button class="get-started-btn" routerLink="/pantry">Get Started</button>
+  </div>
 </section>

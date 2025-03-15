@@ -1,1 +1,79 @@
 <app-navbar></app-navbar>
+
+<section class="recipes-container">
+  <div *ngFor="let recipe of recipes" class="recipe-item">
+    <h3>{{ recipe.name }}</h3>
+    <p>{{ recipe.description }}</p>
+    <div>
+      <strong>Ingredients:</strong>
+      <ul>
+        <li *ngFor="let ingredient of recipe.ingredients">
+          {{ ingredient.name }} ({{ ingredient.quantity }} {{ ingredient.unit }})
+        </li>
+      </ul>
+    </div>
+    <div>
+      <strong>Instructions:</strong>
+      <p>{{ recipe.instructions }}</p>
+    </div>
+    <div>
+      <strong>Cook Time:</strong> {{ recipe.cookTime }} minutes
+      <br>
+      <strong>Temperature:</strong> {{ recipe.temperature }}°F
+    </div>
+    <button (click)="editRecipe(recipe)">Edit</button>
+  </div>
+</section>
+
+<button class="floating-button" (click)="toggleRecipeForm()">+</button>
+
+<div class="popup" *ngIf="showRecipeForm">
+  <form (ngSubmit)="saveRecipe()">
+    <h2>{{ isEditing ? 'Edit' : 'Create' }} Recipe</h2>
+
+    <label for="recipeName">Recipe Name:</label>
+    <input type="text" id="recipeName" [(ngModel)]="currentRecipe.name" name="recipeName" required>
+
+    <label for="recipeDescription">Description:</label>
+    <textarea id="recipeDescription" [(ngModel)]="currentRecipe.description" name="recipeDescription"></textarea>
+
+    <div *ngFor="let ingredient of currentRecipe.ingredients; let i = index" class="ingredient-form">
+      <h3>Ingredient {{ i + 1 }}</h3>
+      <label for="ingredientName{{ i }}">Name:</label>
+      <input type="text" [(ngModel)]="ingredient.name" name="ingredientName{{ i }}" required>
+      
+      <label for="ingredientQuantity{{ i }}">Quantity:</label>
+      <input type="number" [(ngModel)]="ingredient.quantity" name="ingredientQuantity{{ i }}" required>
+      
+      <label for="ingredientUnit{{ i }}">Unit:</label>
+      <input type="text" [(ngModel)]="ingredient.unit" name="ingredientUnit{{ i }}">
+      
+      <button type="button" (click)="removeIngredient(i)">Remove Ingredient</button>
+    </div>
+
+    <button type="button" (click)="addIngredient()" class="add-ingredient-btn">Add Ingredient</button>
+
+    <!-- Instructions now below the "Add Ingredient" button -->
+    <div class="instructions-section">
+      <label for="recipeInstructions">Instructions:</label>
+      <textarea id="recipeInstructions" [(ngModel)]="currentRecipe.instructions" name="recipeInstructions" required></textarea>
+    </div>
+
+    <div class="slider-group">
+      <label for="cookTime">Cook Time (minutes):</label>
+      <input type="range" id="cookTime" [(ngModel)]="currentRecipe.cookTime" name="cookTime" min="1" max="480" step="1">
+      <span>{{ currentRecipe.cookTime }} minutes</span>
+    </div>
+
+    <div class="slider-group">
+      <label for="temperature">Temperature (°F):</label>
+      <input type="range" id="temperature" [(ngModel)]="currentRecipe.temperature" name="temperature" min="100" max="500" step="1">
+      <span>{{ currentRecipe.temperature }}°F</span>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit">{{ isEditing ? 'Save' : 'Create' }} Recipe</button>
+      <button type="button" (click)="toggleRecipeForm()">Cancel</button>
+    </div>
+  </form>
+</div>
