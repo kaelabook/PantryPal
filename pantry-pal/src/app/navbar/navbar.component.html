@@ -11,4 +11,11 @@
     <a routerLink="/shopping-cart" title="Shopping Cart">
         <img src="/ShoppingCart.png" alt="Shopping Cart" style="height: 50px;">
     </a>
-</div>
+  
+    <!-- User info section -->
+    <div class="user-info">
+      <span *ngIf="isLoggedIn; else guest">Hello, {{ username }}</span>
+      <ng-template #guest><span>Guest</span></ng-template>
+    </div>
+  </div>
+  
