@@ -1,4 +1,7 @@
 -- Drop existing tables if they exist to reset the database
+CREATE DATABASE IF NOT EXISTS pantrypal;
+USE pantrypal;
+
 DROP TABLE IF EXISTS shopping_cart;
 DROP TABLE IF EXISTS recipe_ingredients;
 DROP TABLE IF EXISTS recipes;
