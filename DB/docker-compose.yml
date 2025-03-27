@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: PantryPalDB
+    restart: always
+    volumes:
+      - ./init_PantryPal.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=pantrypal
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_HOST_AUTH_METHOD=md5  # Only this line should exist for auth method
+    ports:
+      - "5432:5432"
