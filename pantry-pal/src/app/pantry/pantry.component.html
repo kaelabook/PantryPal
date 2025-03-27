@@ -19,66 +19,62 @@
     </select>
   </div>
 
-<!-- Pantry Table -->
-<div class="pantry-scroll-container">
-  <table class="pantry-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Quantity</th>
-        <th>Unit</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let ingredient of filteredIngredients; let i = index">
-        <td>{{ ingredient.name }}</td>
-        <td>{{ ingredient.category }}</td>
-        <td>{{ ingredient.quantity }}</td>
-        <td>{{ ingredient.unit }}</td>
-        <td>
-          <button class="edit-button" (click)="editIngredient(i)">Edit</button>
-          <button class="delete-button" (click)="removeIngredient(i)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
 
-  <button class="floating-button" (click)="toggleIngredientForm()">+</button>
+  <!-- Pantry Table -->
+  <div class="pantry-scroll-container">
+    <table class="pantry-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingredient of filteredIngredients; let i = index">
+          <td>{{ ingredient.name }}</td>
+          <td>{{ ingredient.category }}</td>
+          <td>{{ ingredient.quantity }}</td>
+          <td>{{ ingredient.unit }}</td>
+          <td>
+            <button class="edit-button" (click)="editIngredient(i)">Edit</button>
+            <button class="delete-button" (click)="removeIngredient(i)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<!-- Popup Form -->
-<div class="popup" *ngIf="showIngredientForm">
-  <form (ngSubmit)="saveIngredient()">
-    <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
+  <!-- Floating Add Button -->
+  <button class="floating-button" (click)="toggleFoodForm()">+</button>
 
-    <div class="form-container">
-      <label for="ingredientName">Name:</label>
-      <input type="text" id="ingredientName" [(ngModel)]="currentIngredient.name" name="ingredientName" required>
+  <!-- Popup Form -->
+  <div class="popup" *ngIf="showIngredientForm">
+    <form (ngSubmit)="saveIngredient()">
+      <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
 
-      <label for="ingredientCategory">Category:</label>
-      <select id="ingredientCategory" [(ngModel)]="currentIngredient.category" name="ingredientCategory" required>
-        <option value="fruits">Fruits</option>
-        <option value="vegetables">Vegetables</option>
-        <option value="grains">Grains</option>
-        <option value="protein">Protein</option>
-        <option value="dairy">Dairy</option>
-        <option value="seasonings">Seasonings</option>
-        <option value="substitutions">Substitutions</option>
-        <option value="misc">Miscellaneous</option>
-      </select>
+      <div class="form-container">
+        <label for="foodName">Name:</label>
+        <select id="foodName" [(ngModel)]="currentIngredient.name" (change)="updateIngredientDetails()" name="foodName" required>
+          <option *ngFor="let ingredient of allIngredients" [value]="ingredient.name">{{ ingredient.name }}</option>
+        </select>
 
-      <label for="ingredientQuantity">Quantity:</label>
-      <input type="number" id="ingredientQuantity" [(ngModel)]="currentIngredient.quantity" name="ingredientQuantity" required>
+        <label for="ingredientQuantity">Quantity:</label>
+        <input type="number" id="ingredientQuantity" [(ngModel)]="currentIngredient.quantity" name="ingredientQuantity" required>
 
-      <label for="ingredientUnit">Unit:</label>
-      <input type="text" id="ingredientUnit" [(ngModel)]="currentIngredient.unit" name="ingredientUnit">
-    </div>
+        <label for="ingredientCategory">Category:</label>
+        <input type="text" id="ingredientCategory" [(ngModel)]="currentIngredient.category" name="ingredientCategory" readonly>
 
-    <div class="submit-row">
-      <button type="button" (click)="toggleIngredientForm()">Cancel</button>
-      <button type="submit">{{ isEditing ? 'Save' : 'Add' }} Ingredient</button>
-    </div>
-  </form>
+        <label for="ingredientUnit">Unit:</label>
+        <input type="text" id="ingredientUnit" [(ngModel)]="currentIngredient.unit" name="ingredientUnit" readonly>
+      </div>
+
+      <div class="submit-row">
+        <button type="button" (click)="toggleFoodForm()">Cancel</button>
+        <button type="submit">{{ isEditing ? 'Save' : 'Add' }} Ingredient</button>
+      </div>
+    </form>
+  </div>
 </div>
