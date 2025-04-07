@@ -6,50 +6,51 @@
   <!-- Flex container to show both sections side by side -->
   <div class="shopping-cart-sections">
     <!-- Left section: List of all ingredients added to the app -->
-<div class="ingredients-list">
-  <h3>All Ingredients</h3>
+    <div class="ingredients-list">
+      <h3>All Ingredients</h3>
 
-  <!-- Search and Filter Section -->
-  <div class="search-filter-wrapper">
-    <div class="search-filter-container">
-      <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." (input)="applySearchFilter()" />
-      <select [(ngModel)]="selectedCategory" (change)="applyFilter()">
-        <option value="">Filter by Category</option>
-        <option value="fruits">Fruits</option>
-        <option value="vegetables">Vegetables</option>
-        <option value="grains">Grains</option>
-        <option value="protein">Protein</option>
-        <option value="dairy">Dairy</option>
-        <option value="seasonings">Seasonings</option>
-        <option value="substitutions">Substitutions</option>
-        <option value="misc">Miscellaneous</option>
-      </select>
+      <!-- Search and Filter Section -->
+      <div class="search-filter-wrapper">
+        <div class="search-filter-container">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." 
+                 (input)="applySearchFilter()" class="search-bar" />
+          <select [(ngModel)]="selectedCategory" (change)="applyFilter()" class="filter-dropdown">
+            <option value="">Filter by Category</option>
+            <option value="fruits">Fruits</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="grains">Grains</option>
+            <option value="protein">Protein</option>
+            <option value="dairy">Dairy</option>
+            <option value="seasonings">Seasonings</option>
+            <option value="substitutions">Substitutions</option>
+            <option value="misc">Miscellaneous</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ingredients-scroll-container">
+        <table class="shopping-cart-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ingredient of filteredIngredients; let i = index">
+              <td>{{ ingredient.name }}</td>
+              <td>{{ ingredient.quantity }}</td>
+              <td>{{ ingredient.unit }}</td>
+              <td>
+                <button class="add-to-cart-btn" (click)="addToCart(i)">Add to Cart</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-
-  <div class="ingredients-scroll-container">
-    <table class="shopping-cart-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Quantity</th>
-          <th>Unit</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ingredient of filteredIngredients; let i = index">
-          <td>{{ ingredient.name }}</td>
-          <td>{{ ingredient.quantity }}</td>
-          <td>{{ ingredient.unit }}</td>
-          <td>
-            <button class="add-to-cart-btn" (click)="addToCart(i)">Add to Cart</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 
     <!-- Right section: Current shopping cart -->
     <div class="shopping-cart">
@@ -58,8 +59,9 @@
       <!-- Search and Filter Section for Shopping Cart -->
       <div class="cart-filter-wrapper">
         <div class="cart-filter-container">
-          <input type="text" [(ngModel)]="cartSearchQuery" placeholder="Search Cart..." (input)="applyCartSearchFilter()" />
-          <select [(ngModel)]="selectedCartCategory" (change)="applyCartFilter()">
+          <input type="text" [(ngModel)]="cartSearchQuery" placeholder="Search Cart..." 
+                 (input)="applyCartSearchFilter()" class="search-bar" />
+          <select [(ngModel)]="selectedCartCategory" (change)="applyCartFilter()" class="filter-dropdown">
             <option value="">Filter by Category</option>
             <option value="fruits">Fruits</option>
             <option value="vegetables">Vegetables</option>
@@ -116,6 +118,18 @@
 
         <label for="itemUnit">Unit:</label>
         <input type="text" id="itemUnit" [(ngModel)]="currentItem.unit" name="itemUnit">
+
+        <label for="itemCategory">Category:</label>
+        <select id="itemCategory" [(ngModel)]="currentItem.category" name="itemCategory">
+          <option value="fruits">Fruits</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="grains">Grains</option>
+          <option value="protein">Protein</option>
+          <option value="dairy">Dairy</option>
+          <option value="seasonings">Seasonings</option>
+          <option value="substitutions">Substitutions</option>
+          <option value="misc">Miscellaneous</option>
+        </select>
       </div>
 
       <div class="submit-row">
