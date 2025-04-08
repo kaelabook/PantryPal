@@ -52,7 +52,6 @@ public class RecipeService {
 
         Recipe savedRecipe = recipeRepository.save(recipe);
 
-        // Save ingredients
         List<RecipeIngredient> ingredients = recipeDTO.getIngredients().stream()
                 .map(ingDTO -> {
                     RecipeIngredient ingredient = new RecipeIngredient();
@@ -65,7 +64,6 @@ public class RecipeService {
 
         savedRecipe.setIngredients(ingredients);
 
-        // Check pantry and update shopping cart
         checkPantryAndUpdateCart(savedRecipe, recipeDTO.getUserId());
 
         return convertToDTO(savedRecipe);
@@ -83,7 +81,6 @@ public class RecipeService {
         existingRecipe.setServings(recipeDTO.getServings());
         existingRecipe.setInstructions(recipeDTO.getInstructions());
 
-        // Update ingredients
         recipeIngredientRepository.deleteByRecipeId(id);
         
         List<RecipeIngredient> ingredients = recipeDTO.getIngredients().stream()
@@ -100,7 +97,6 @@ public class RecipeService {
 
         Recipe updatedRecipe = recipeRepository.save(existingRecipe);
         
-        // Re-check pantry after update
         checkPantryAndUpdateCart(updatedRecipe, recipeDTO.getUserId());
 
         return convertToDTO(updatedRecipe);
@@ -119,18 +115,15 @@ public class RecipeService {
             double availableQuantity = pantryItemOpt.map(PantryItem::getQuantity).orElse(0.0);
 
             if (availableQuantity < neededQuantity) {
-                // Check if item already exists in cart
                 Optional<ShoppingCart> existingCartItem = shoppingCartRepository
                         .findByUserIdAndName(userId, ingredient.getName());
 
                 if (existingCartItem.isPresent()) {
-                    // Update existing cart item
                     ShoppingCart cartItem = existingCartItem.get();
                     double newQuantity = Math.max(neededQuantity - availableQuantity, cartItem.getQuantity());
                     cartItem.setQuantity(newQuantity);
                     shoppingCartRepository.save(cartItem);
                 } else {
-                    // Add new item to cart
                     ShoppingCart cartItem = new ShoppingCart();
                     cartItem.setUserId(userId);
                     cartItem.setName(ingredient.getName());
@@ -141,18 +134,6 @@ public class RecipeService {
                 }
             }
         }
-    }
-
-    private String determineCategory(String ingredientName) {
-        // Simple categorization logic - expand as needed
-        if (ingredientName.toLowerCase().contains("apple") || 
-            ingredientName.toLowerCase().contains("banana")) {
-            return "FRUITS";
-        } else if (ingredientName.toLowerCase().contains("chicken") || 
-                   ingredientName.toLowerCase().contains("beef")) {
-            return "PROTEIN";
-        }
-        return "MISC";
     }
 
     private RecipeDTO convertToDTO(Recipe recipe) {
