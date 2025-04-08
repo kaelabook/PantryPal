@@ -1,6 +1,6 @@
-package com.pantrypal.repository;
+package PantryPal.PantryPal.repository;
 
-import com.pantrypal.model.Recipe;
+import PantryPal.PantryPal.model.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

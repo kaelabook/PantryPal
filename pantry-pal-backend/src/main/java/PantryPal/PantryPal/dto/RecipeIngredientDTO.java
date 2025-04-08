@@ -1,4 +1,4 @@
-package com.pantrypal.dto;
+package PantryPal.PantryPal.dto;
 
 public class RecipeIngredientDTO {
     private Long id;
@@ -8,32 +8,42 @@ public class RecipeIngredientDTO {
     private Long recipeId;
 
     public Long getId() {
-        return id;}
+        return id;
+    }
 
     public void setId(Long id) {
-        this.id = id;}
+        this.id = id;
+    }
 
     public String getName() {
-        return name;}
+        return name;
+    }
 
     public void setName(String name) {
-        this.name = name;}
+        this.name = name;
+    }
 
     public Double getQuantity() {
-        return quantity;}
+        return quantity;
+    }
 
     public void setQuantity(Double quantity) {
-        this.quantity = quantity;}
+        this.quantity = quantity;
+    }
 
     public String getUnit() {
-        return unit;}
+        return unit;
+    }
 
     public void setUnit(String unit) {
-        this.unit = unit;}
+        this.unit = unit;
+    }
 
     public Long getRecipeId() {
-        return recipeId;}
+        return recipeId;
+    }
 
     public void setRecipeId(Long recipeId) {
-        this.recipeId = recipeId;}
+        this.recipeId = recipeId;
+    }
 }

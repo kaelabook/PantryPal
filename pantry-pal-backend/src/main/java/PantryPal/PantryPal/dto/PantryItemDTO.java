@@ -1,4 +1,4 @@
-package com.pantrypal.dto;
+package PantryPal.PantryPal.dto;
 
 public class PantryItemDTO {
     private Long id;
@@ -8,39 +8,51 @@ public class PantryItemDTO {
     private Double quantity;
     private String unit;
 
-    public Long getId() { 
-        return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { 
-        this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getUserId() { 
-        return userId; }
+    public Long getUserId() {
+        return userId;
+    }
 
     public void setUserId(Long userId) {
-        this.userId = userId; }
+        this.userId = userId;
+    }
 
     public String getName() {
-        return name;}
+        return name;
+    }
 
     public void setName(String name) {
-        this.name = name;}
+        this.name = name;
+    }
 
     public String getCategory() {
-        return category;}
+        return category;
+    }
 
     public void setCategory(String category) {
-        this.category = category;}
+        this.category = category;
+    }
 
     public Double getQuantity() {
-        return quantity;}
+        return quantity;
+    }
 
     public void setQuantity(Double quantity) {
-        this.quantity = quantity;}
+        this.quantity = quantity;
+    }
 
     public String getUnit() {
-        return unit;}
+        return unit;
+    }
 
     public void setUnit(String unit) {
-        this.unit = unit;}
+        this.unit = unit;
+    }
 }

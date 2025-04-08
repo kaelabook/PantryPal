@@ -1,7 +1,7 @@
-package com.pantrypal.controller;
+package PantryPal.PantryPal.controller;
 
-import com.pantrypal.dto.RecipeIngredientDTO;
-import com.pantrypal.service.RecipeIngredientService;
+import PantryPal.PantryPal.dto.RecipeIngredientDTO;
+import PantryPal.PantryPal.service.RecipeIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

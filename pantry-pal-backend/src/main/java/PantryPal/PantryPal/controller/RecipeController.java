@@ -1,7 +1,7 @@
-package com.pantrypal.controller;
+package PantryPal.PantryPal.controller;
 
-import com.pantrypal.dto.RecipeDTO;
-import com.pantrypal.service.RecipeService;
+import PantryPal.PantryPal.dto.RecipeDTO;
+import PantryPal.PantryPal.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +39,7 @@ public class RecipeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RecipeDTO> updateRecipe(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @RequestBody RecipeDTO recipeDTO) {
         RecipeDTO updatedRecipe = recipeService.updateRecipe(id, recipeDTO);
         return ResponseEntity.ok(updatedRecipe);

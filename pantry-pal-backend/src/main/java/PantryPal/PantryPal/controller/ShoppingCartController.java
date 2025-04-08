@@ -1,11 +1,10 @@
-package com.pantrypal.controller;
+package PantryPal.PantryPal.controller;
 
-import com.pantrypal.dto.ShoppingCartDTO;
-import com.pantrypal.service.ShoppingCartService;
+import PantryPal.PantryPal.dto.ShoppingCartDTO;
+import PantryPal.PantryPal.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

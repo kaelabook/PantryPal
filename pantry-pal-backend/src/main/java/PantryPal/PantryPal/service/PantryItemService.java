@@ -1,8 +1,8 @@
-package com.pantrypal.service;
+package PantryPal.PantryPal.service;
 
-import com.pantrypal.dto.PantryItemDTO;
-import com.pantrypal.model.PantryItem;
-import com.pantrypal.repository.PantryItemRepository;
+import PantryPal.PantryPal.dto.PantryItemDTO;
+import PantryPal.PantryPal.model.PantryItem;
+import PantryPal.PantryPal.repository.PantryItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

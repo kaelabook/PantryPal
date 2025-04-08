@@ -1,8 +1,8 @@
-package com.pantrypal.service;
+package PantryPal.PantryPal.service;
 
-import com.pantrypal.dto.ShoppingCartDTO;
-import com.pantrypal.model.ShoppingCart;
-import com.pantrypal.repository.ShoppingCartRepository;
+import PantryPal.PantryPal.dto.ShoppingCartDTO;
+import PantryPal.PantryPal.model.ShoppingCart;
+import PantryPal.PantryPal.repository.ShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

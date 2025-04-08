@@ -1,4 +1,4 @@
-package com.example.pantrypal.config;
+package PantryPal.PantryPal.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

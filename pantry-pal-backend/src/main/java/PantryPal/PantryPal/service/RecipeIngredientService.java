@@ -1,9 +1,9 @@
-package com.pantrypal.service;
+package PantryPal.PantryPal.service;
 
-import com.pantrypal.dto.RecipeIngredientDTO;
-import com.pantrypal.model.RecipeIngredient;
-import com.pantrypal.repository.RecipeIngredientRepository;
-import com.pantrypal.repository.RecipeRepository;
+import PantryPal.PantryPal.dto.RecipeIngredientDTO;
+import PantryPal.PantryPal.model.RecipeIngredient;
+import PantryPal.PantryPal.repository.RecipeIngredientRepository;
+import PantryPal.PantryPal.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class RecipeIngredientService {
 
     @Autowired
     public RecipeIngredientService(RecipeIngredientRepository ingredientRepository,
-                                 RecipeRepository recipeRepository) {
+            RecipeRepository recipeRepository) {
         this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;
     }

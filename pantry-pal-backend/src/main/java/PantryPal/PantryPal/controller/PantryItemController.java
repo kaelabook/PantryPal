@@ -1,7 +1,7 @@
-package com.pantrypal.controller;
+package PantryPal.PantryPal.controller;
 
-import com.pantrypal.dto.PantryItemDTO;
-import com.pantrypal.service.PantryItemService;
+import PantryPal.PantryPal.dto.PantryItemDTO;
+import PantryPal.PantryPal.service.PantryItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,8 @@
-package com.pantrypal.service;
+package PantryPal.PantryPal.service;
 
-import com.pantrypal.dto.*;
-import com.pantrypal.model.*;
-import com.pantrypal.repository.*;
+import PantryPal.PantryPal.dto.*;
+import PantryPal.PantryPal.model.*;
+import PantryPal.PantryPal.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +19,9 @@ public class RecipeService {
 
     @Autowired
     public RecipeService(RecipeRepository recipeRepository,
-                        RecipeIngredientRepository recipeIngredientRepository,
-                        PantryItemRepository pantryItemRepository,
-                        ShoppingCartRepository shoppingCartRepository) {
+            RecipeIngredientRepository recipeIngredientRepository,
+            PantryItemRepository pantryItemRepository,
+            ShoppingCartRepository shoppingCartRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.pantryItemRepository = pantryItemRepository;
@@ -82,7 +82,7 @@ public class RecipeService {
         existingRecipe.setInstructions(recipeDTO.getInstructions());
 
         recipeIngredientRepository.deleteByRecipeId(id);
-        
+
         List<RecipeIngredient> ingredients = recipeDTO.getIngredients().stream()
                 .map(ingDTO -> {
                     RecipeIngredient ingredient = new RecipeIngredient();
@@ -96,7 +96,7 @@ public class RecipeService {
         existingRecipe.setIngredients(ingredients);
 
         Recipe updatedRecipe = recipeRepository.save(existingRecipe);
-        
+
         checkPantryAndUpdateCart(updatedRecipe, recipeDTO.getUserId());
 
         return convertToDTO(updatedRecipe);
