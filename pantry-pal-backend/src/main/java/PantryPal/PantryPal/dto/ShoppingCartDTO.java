@@ -8,52 +8,39 @@ public class ShoppingCartDTO {
     private String unit;
     private String category;
 
-    // Getters and Setters
     public Long getId() {
-        return id;
-    }
+        return id;}
 
     public void setId(Long id) {
-        this.id = id;
-    }
+        this.id = id;}
 
     public Long getUserId() {
-        return userId;
-    }
+        return userId;}
 
     public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+        this.userId = userId;}
 
     public String getName() {
-        return name;
-    }
+        return name;}
 
     public void setName(String name) {
-        this.name = name;
-    }
+        this.name = name;}
 
     public Double getQuantity() {
-        return quantity;
-    }
+        return quantity;}
 
     public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
+        this.quantity = quantity;}
 
     public String getUnit() {
-        return unit;
-    }
+        return unit;}
 
     public void setUnit(String unit) {
-        this.unit = unit;
-    }
+        this.unit = unit;}
 
     public String getCategory() {
-        return category;
-    }
+        return category;}
 
     public void setCategory(String category) {
-        this.category = category;
-    }
+        this.category = category;}
 }
