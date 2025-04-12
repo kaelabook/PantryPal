@@ -136,6 +136,11 @@ public class RecipeService {
         }
     }
 
+    private String determineCategory(String name) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'determineCategory'");
+    }
+
     private RecipeDTO convertToDTO(Recipe recipe) {
         RecipeDTO dto = new RecipeDTO();
         dto.setId(recipe.getId());

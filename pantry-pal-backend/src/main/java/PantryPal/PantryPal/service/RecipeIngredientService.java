@@ -1,6 +1,7 @@
 package PantryPal.PantryPal.service;
 
 import PantryPal.PantryPal.dto.RecipeIngredientDTO;
+import PantryPal.PantryPal.model.Recipe;
 import PantryPal.PantryPal.model.RecipeIngredient;
 import PantryPal.PantryPal.repository.RecipeIngredientRepository;
 import PantryPal.PantryPal.repository.RecipeRepository;

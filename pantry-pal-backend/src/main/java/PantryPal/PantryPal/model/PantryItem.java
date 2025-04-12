@@ -15,7 +15,7 @@ public class PantryItem {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private IngredientCategory category;
+    private String category;
 
     private Double quantity;
     private String unit;
@@ -44,11 +44,11 @@ public class PantryItem {
         this.name = name;
     }
 
-    public IngredientCategory getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(IngredientCategory category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
