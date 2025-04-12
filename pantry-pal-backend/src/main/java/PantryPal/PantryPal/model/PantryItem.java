@@ -1,5 +1,8 @@
 package PantryPal.PantryPal.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,7 +18,19 @@ public class PantryItem {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private String category;
+    @Column(columnDefinition = "VARCHAR(255)")
+    private Category category;
+
+    // Add JSON handling
+    @JsonValue
+    public String getCategoryValue() {
+        return category.name().toLowerCase();
+    }
+
+    @JsonCreator
+    public static Category forValue(String value) {
+        return Category.valueOf(value.toUpperCase());
+    }
 
     private Double quantity;
     private String unit;
@@ -44,11 +59,11 @@ public class PantryItem {
         this.name = name;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

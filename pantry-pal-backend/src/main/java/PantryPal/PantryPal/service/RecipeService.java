@@ -3,7 +3,6 @@ package PantryPal.PantryPal.service;
 import PantryPal.PantryPal.dto.*;
 import PantryPal.PantryPal.model.*;
 import PantryPal.PantryPal.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ public class RecipeService {
     private final PantryItemRepository pantryItemRepository;
     private final ShoppingCartRepository shoppingCartRepository;
 
-    @Autowired
     public RecipeService(RecipeRepository recipeRepository,
             RecipeIngredientRepository recipeIngredientRepository,
             PantryItemRepository pantryItemRepository,
@@ -28,9 +26,16 @@ public class RecipeService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
+    public List<RecipeDTO> getAllRecipes() {
+        return recipeRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    
     public List<RecipeDTO> getAllRecipesForUser(Long userId) {
-        List<Recipe> recipes = recipeRepository.findByUserId(userId);
-        return recipes.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return recipeRepository.findByUserId(userId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public RecipeDTO getRecipeById(Long id) {
@@ -136,8 +141,7 @@ public class RecipeService {
         }
     }
 
-    private String determineCategory(String name) {
-        // TODO Auto-generated method stub
+    private Category determineCategory(String name) {
         throw new UnsupportedOperationException("Unimplemented method 'determineCategory'");
     }
 

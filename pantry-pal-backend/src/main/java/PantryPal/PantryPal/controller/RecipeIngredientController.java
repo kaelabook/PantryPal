@@ -2,7 +2,6 @@ package PantryPal.PantryPal.controller;
 
 import PantryPal.PantryPal.dto.RecipeIngredientDTO;
 import PantryPal.PantryPal.service.RecipeIngredientService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,6 @@ import java.util.List;
 public class RecipeIngredientController {
     private final RecipeIngredientService ingredientService;
 
-    @Autowired
     public RecipeIngredientController(RecipeIngredientService ingredientService) {
         this.ingredientService = ingredientService;
     }

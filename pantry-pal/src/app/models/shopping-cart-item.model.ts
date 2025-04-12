@@ -1,8 +1,8 @@
 export interface ShoppingCartItem {
-    id?: number;
-    name: string;
-    quantity: number;
-    unit: string;
-    category: string;
-    userId?: number;
-  }
+  id: number;  // Required field
+  name: string;
+  quantity: number;
+  unit: string;
+  category: string;
+  userId: number;
+}

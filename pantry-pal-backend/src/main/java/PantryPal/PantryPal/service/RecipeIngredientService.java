@@ -5,7 +5,6 @@ import PantryPal.PantryPal.model.Recipe;
 import PantryPal.PantryPal.model.RecipeIngredient;
 import PantryPal.PantryPal.repository.RecipeIngredientRepository;
 import PantryPal.PantryPal.repository.RecipeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class RecipeIngredientService {
     private final RecipeIngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
 
-    @Autowired
     public RecipeIngredientService(RecipeIngredientRepository ingredientRepository,
             RecipeRepository recipeRepository) {
         this.ingredientRepository = ingredientRepository;

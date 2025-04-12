@@ -1,163 +1,201 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // Add this import
+import { CommonModule } from '@angular/common'; // Also good to have
 import { ShoppingCartService } from '../../services/shopping-cart.service';
 import { PantryService } from '../../services/pantry.service';
 import { ShoppingCartItem } from '../../models/shopping-cart-item.model';
 import { PantryItem } from '../../models/pantry-item.model';
-import { FormsModule } from '@angular/forms'; 
-import { CommonModule } from '@angular/common'; 
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-shopping-cart',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NavbarComponent 
-  ],
+  standalone: true, // Make sure this is true for standalone components
+  imports: [CommonModule, FormsModule, NavbarComponent], // Add FormsModule here
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.css']
 })
 export class ShoppingCartComponent implements OnInit {
+  // Data
+  allIngredients: PantryItem[] = [];
+  filteredIngredients: PantryItem[] = [];
+  cartItems: ShoppingCartItem[] = [];
+  filteredCartItems: ShoppingCartItem[] = [];
+  
+  // Form states
+  showItemForm = false;
+  isEditing = false;
+  editingIndex: number | null = null;
+  currentItem: ShoppingCartItem = this.createEmptyItem();
+  
+  // Filters
   searchQuery = '';
   selectedCategory = '';
   cartSearchQuery = '';
   selectedCartCategory = '';
   
-  showItemForm = false;
-  isEditing = false;
-  currentItem: ShoppingCartItem = { 
-    name: '', 
-    quantity: 0, 
-    unit: '', 
-    category: 'MISC',
-    userId: 1 // Default user ID - replace with actual user ID from auth
-  };
-
-  // Sample data replaced with actual API data
-  ingredients: PantryItem[] = [];
-  shoppingCart: ShoppingCartItem[] = [];
-  filteredCartItems: ShoppingCartItem[] = [];
-  filteredIngredients: PantryItem[] = [];
+  // Constants
+  categories = [
+    'Fruits', 'Vegetables', 'Grains', 'Protein', 
+    'Dairy', 'Seasonings', 'Substitutions', 'Miscellaneous'
+  ];
+  
+  userId = 1; // Replace with actual user ID from auth service
 
   constructor(
-    private shoppingCartService: ShoppingCartService,
+    private cartService: ShoppingCartService,
     private pantryService: PantryService
   ) {}
 
   ngOnInit(): void {
+    this.loadIngredients();
     this.loadCartItems();
-    this.loadPantryItems();
+  }
+
+  loadIngredients(): void {
+    this.pantryService.getAllItemsForUser(this.userId).subscribe({
+      next: (items) => {
+        this.allIngredients = items;
+        this.filteredIngredients = [...items];
+      },
+      error: (err) => console.error('Error loading ingredients:', err)
+    });
   }
 
   loadCartItems(): void {
-    this.shoppingCartService.getAllItems().subscribe(items => {
-      this.shoppingCart = items;
-      this.filteredCartItems = [...items];
-      this.applyCartFilter();
+    this.cartService.getAllItems(this.userId).subscribe({
+      next: (items) => {
+        this.cartItems = items;
+        this.filteredCartItems = [...items];
+      },
+      error: (err) => console.error('Error loading cart items:', err)
     });
   }
 
-  loadPantryItems(): void {
-    this.pantryService.getAllItems().subscribe(items => {
-      this.ingredients = items;
-      this.filteredIngredients = [...items];
-      this.applyFilter();
-    });
+  // Filter methods
+  applySearchFilter(): void {
+    this.filteredIngredients = this.allIngredients.filter(item =>
+      item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
+      (this.selectedCategory ? item.category === this.selectedCategory : true)
+    );
   }
 
-  addToCart(index: number): void {
-    const ingredient = this.filteredIngredients[index];
+  applyFilter(): void {
+    this.applySearchFilter();
+  }
+
+  applyCartSearchFilter(): void {
+    this.filteredCartItems = this.cartItems.filter(item =>
+      item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase()) &&
+      (this.selectedCartCategory ? item.category === this.selectedCartCategory : true)
+    );
+  }
+
+  applyCartFilter(): void {
+    this.applyCartSearchFilter();
+  }
+
+  // Item management
+  addToCart(ingredient: PantryItem): void {
     const cartItem: ShoppingCartItem = {
+      id: -1, // Temporary ID
       name: ingredient.name,
       quantity: ingredient.quantity,
       unit: ingredient.unit,
       category: ingredient.category,
-      userId: 1 // Replace with actual user ID
+      userId: this.userId
     };
-
-    this.shoppingCartService.addItem(cartItem).subscribe(() => {
-      this.loadCartItems();
+  
+    this.cartService.addItem(cartItem).subscribe({
+      next: (savedItem) => {
+        // The savedItem will have the real ID from backend
+        this.loadCartItems();
+      },
+      error: (err) => console.error('Error adding to cart:', err)
     });
   }
 
-  removeItem(index: number): void {
-    const id = this.filteredCartItems[index].id;
-    if (id) {
-      this.shoppingCartService.deleteItem(id).subscribe(() => {
-        this.loadCartItems();
-      });
-    }
+  removeItem(id: number): void {
+    this.cartService.deleteItem(id).subscribe({
+      next: () => this.loadCartItems(),
+      error: (err) => console.error('Error removing item:', err)
+    });
   }
 
-  editItem(index: number): void {
-    this.isEditing = true;
-    this.currentItem = { ...this.filteredCartItems[index] };
-    this.showItemForm = true;
-  }
-
+  // Form handling
   toggleItemForm(): void {
     this.showItemForm = !this.showItemForm;
     if (!this.showItemForm) {
-      this.isEditing = false;
-      this.currentItem = { 
-        name: '', 
-        quantity: 0, 
-        unit: '', 
-        category: 'MISC',
-        userId: 1
-      };
+      this.resetForm();
     }
   }
 
   saveItem(): void {
     if (this.isEditing) {
-      if (this.currentItem.id) {
-        this.shoppingCartService.updateItem(this.currentItem.id, this.currentItem)
-          .subscribe(() => {
-            this.loadCartItems();
-            this.toggleItemForm();
-          });
-      }
-    } else {
-      this.shoppingCartService.addItem(this.currentItem)
-        .subscribe(() => {
+      if (!this.currentItem.id) return;
+      this.cartService.updateItem(this.currentItem.id, this.currentItem).subscribe({
+        next: () => {
           this.loadCartItems();
           this.toggleItemForm();
-        });
+        },
+        error: (err) => console.error('Error updating item:', err)
+      });
+    } else {
+      this.currentItem.userId = this.userId;
+      this.cartService.addItem(this.currentItem).subscribe({
+        next: () => {
+          this.loadCartItems();
+          this.toggleItemForm();
+        },
+        error: (err) => console.error('Error adding item:', err)
+      });
     }
   }
 
+  // Edit functionality
+  startEditing(index: number): void {
+    this.editingIndex = index;
+  }
+
+  saveEdit(index: number): void {
+    const item = this.filteredCartItems[index];
+    if (item.id) {
+      this.cartService.updateItem(item.id, item).subscribe({
+        next: () => {
+          this.editingIndex = null;
+          this.loadCartItems();
+        },
+        error: (err) => console.error('Error updating item:', err)
+      });
+    }
+  }
+
+  // Checkout
   checkout(): void {
-    this.shoppingCartService.checkout().subscribe(() => {
-      this.loadCartItems();
-      // Additional logic after checkout if needed
-    });
+    if (confirm('Are you sure you want to checkout?')) {
+      this.cartService.checkout(this.userId).subscribe({
+        next: () => {
+          alert('Checkout completed successfully!');
+          this.loadCartItems();
+        },
+        error: (err) => console.error('Error during checkout:', err)
+      });
+    }
   }
 
-  applySearchFilter(): void {
-    this.filteredIngredients = this.ingredients.filter(ingredient =>
-      ingredient.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  // Helpers
+  private createEmptyItem(): ShoppingCartItem {
+    return {
+      id: -1, // Temporary ID, will be replaced by backend
+      name: '',
+      quantity: 1,
+      unit: '',
+      category: 'Fruits',
+      userId: this.userId
+    };
   }
 
-  applyFilter(): void {
-    this.filteredIngredients = this.ingredients.filter(ingredient =>
-      (this.selectedCategory ? ingredient.category === this.selectedCategory : true) &&
-      (this.searchQuery ? ingredient.name.toLowerCase().includes(this.searchQuery.toLowerCase()) : true)
-    );
-  }
-
-  applyCartSearchFilter(): void {
-    this.filteredCartItems = this.shoppingCart.filter(item =>
-      item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase())
-    );
-  }
-
-  applyCartFilter(): void {
-    this.filteredCartItems = this.shoppingCart.filter(item =>
-      (this.selectedCartCategory ? item.category === this.selectedCartCategory : true) &&
-      (this.cartSearchQuery ? item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase()) : true)
-    );
+  private resetForm(): void {
+    this.isEditing = false;
+    this.currentItem = this.createEmptyItem();
   }
 }

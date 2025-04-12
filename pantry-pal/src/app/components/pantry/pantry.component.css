@@ -1,217 +1,293 @@
-/* Ensure the navbar is always visible */
+/* Prevent body scrolling */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Main container */
+.pantry-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px; /* Navbar height */
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+/* Navbar positioning */
 app-navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  height: 80px;
   z-index: 1000;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Pantry container fills viewport but doesn't scroll past navbar */
-.pantry-container {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 120px); /* Adjust the height to leave room for the navbar */
-  padding-top: 100px; /* Adjust space for the navbar to avoid overlap */
-  padding-bottom: 60px; /* Space for the floating button */
-  overflow-y: hidden; /* Prevent page scrolling */
-  align-items: center; /* Center contents */
-}
-
-/* Centered Page Heading */
+/* Page title */
 .center-heading {
   text-align: center;
-  margin-bottom: 20px; /* Space between title and content */
+  font-size: 28px;
+  color: #046A38;
+  margin: 20px 0;
+  font-weight: 600;
 }
 
-/* Search & Filter Layout */
+/* Alert messages */
+.alert {
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px auto;
+  width: 90%;
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #046A38;
+  margin-bottom: 1rem;
+}
+
+/* Main content area */
+.pantry-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Search and filter */
 .search-filter-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 90%;
+  max-width: 1000px;
 }
 
-/* Fixed Width Search Bar */
+.search-bar, .filter-dropdown {
+  padding: 10px 15px;
+  border: 1px solid #CBA052;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: white;
+}
+
 .search-bar {
-  width: 200px; /* Fixed reasonable width */
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  text-align: left; /* Ensures normal text input behavior */
+  flex: 2;
 }
 
-/* Fixed Width Filter Dropdown */
 .filter-dropdown {
-  width: 160px; /* Small but readable */
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  flex: 1;
 }
 
-/* Pantry Table Container - Ensures it fits the screen */
-.pantry-scroll-container {
-  flex-grow: 1;
-  overflow-y: auto; /* Enables scrolling within the container */
-  width: 90%; /* Ensures table stays within viewport */
-  max-width: 1000px; /* Prevents excessive stretching */
-  border: 1px solid red; /* Thinner red outline around the pantry table */
-  border-radius: 10px; /* Rounded corners */
-  padding: 15px; /* Padding inside the box */
+/* Table container with scroll */
+.table-scroll-container {
+  width: 90%;
+  max-width: 1000px;
+  border: 1px solid red;
+  border-radius: 10px;
+  overflow: auto;
+  max-height: calc(100vh - 280px);
+  margin-bottom: 20px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* Pantry Table with red outline and rounded corners */
+/* Table styling */
 .pantry-table {
   width: 100%;
+  min-width: 900px;
   border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.pantry-table th, .pantry-table td {
-  padding: 12px 15px; /* More padding for better spacing */
-  text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
 .pantry-table th {
   background-color: #046A38;
   color: white;
+  padding: 15px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  font-weight: 500;
 }
 
 .pantry-table td {
-  background-color: #f9f9f9;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  background-color: white;
 }
 
-/* Floating Button */
+.pantry-table tr:hover td {
+  background-color: #f5f5f5;
+}
+
+/* No items message */
+.no-items-message {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  width: 90%;
+  max-width: 1000px;
+}
+
+/* Button styles */
+.edit-button, .delete-button {
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.edit-button {
+  background-color: #046A38;
+  color: white;
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #719949;
+  transform: scale(1.05);
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+
+/* Floating button */
 .floating-button {
   position: fixed;
-  bottom: 60px; /* Space for the floating button */
-  right: 20px;
+  bottom: 30px;
+  right: 30px;
   width: 60px;
   height: 60px;
   background-color: #046A38;
   color: #E7E3C6;
-  font-size: 24px;
   border: none;
   border-radius: 50%;
+  font-size: 24px;
   cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .floating-button:hover {
   background-color: #719949;
-  color: #F8E08E;
+  transform: scale(1.1);
 }
 
-/* Popup Form Styling */
+/* Popup form */
 .popup {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Centers the popup */
+  transform: translate(-50%, -50%);
   background: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   width: 90%;
-  max-width: 400px; /* Slightly narrower for a sleeker look */
+  max-width: 500px;
   z-index: 1000;
 }
 
 .popup h2 {
   font-size: 22px;
+  color: #046A38;
   margin-bottom: 20px;
-  color: #333;
   text-align: center;
 }
 
-/* Form container inside the popup */
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Space between form elements */
+  gap: 20px;
 }
 
-/* Larger and more visible labels in the popup form */
 .form-container label {
-  font-size: 16px; /* Increased font size */
-  color: #333; /* Darker color for better visibility */
-  margin-bottom: 8px; /* Slightly more space below labels */
-  font-weight: 600; /* Bold for emphasis */
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
 }
 
-/* Nicer Edit and Delete buttons in the pantry table */
-.pantry-table button {
-  padding: 8px 12px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.pantry-table button:hover {
-  transform: scale(1.05); /* Slight hover effect */
-}
-
-.pantry-table button:active {
-  transform: scale(0.95); /* Slight click effect */
-}
-
-/* Edit button styling */
-.pantry-table button.edit-button {
-  background-color: #046A38; /* Green to match the theme */
-  color: white;
-  margin-right: 8px; /* Space between buttons */
-}
-
-.pantry-table button.edit-button:hover {
-  background-color: #719949; /* Lighter green on hover */
-}
-
-/* Delete button styling */
-.pantry-table button.delete-button {
-  background-color: #e74c3c; /* Red for delete */
-  color: white;
-}
-
-.pantry-table button.delete-button:hover {
-  background-color: #c0392b; /* Darker red on hover */
-}
-
-/* Input fields and select dropdown */
 .form-container input,
 .form-container select {
-  padding: 10px;
-  font-size: 14px;
+  width: 100%;
+  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  width: 100%;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
-  transition: border-color 0.3s ease;
+  font-size: 14px;
+  background-color: white;
 }
 
-.form-container input:focus,
-.form-container select:focus {
-  border-color: #046A38;
-  outline: none;
+.form-row {
+  display: flex;
+  gap: 15px;
 }
 
-/* Buttons inside the popup */
+.form-row > div {
+  flex: 1;
+}
+
 .submit-row {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 15px;
   margin-top: 20px;
 }
 
 .submit-row button {
   padding: 10px 20px;
-  font-size: 14px;
-  border: none;
   border-radius: 6px;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
 .submit-row button[type="submit"] {
@@ -219,15 +295,36 @@ app-navbar {
   color: white;
 }
 
-.submit-row button[type="submit"]:hover {
-  background-color: #719949;
-}
-
 .submit-row button[type="button"] {
   background-color: #e74c3c;
   color: white;
 }
 
-.submit-row button[type="button"]:hover {
-  background-color: #c0392b;
+.submit-row button:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-filter-container {
+    flex-direction: column;
+  }
+  
+  .search-bar, .filter-dropdown {
+    width: 100%;
+  }
+  
+  .table-scroll-container {
+    max-height: calc(100vh - 320px);
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .pantry-table th,
+  .pantry-table td {
+    padding: 12px 10px;
+  }
 }

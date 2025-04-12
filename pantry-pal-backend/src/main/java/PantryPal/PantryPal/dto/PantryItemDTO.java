@@ -1,10 +1,12 @@
 package PantryPal.PantryPal.dto;
 
+import PantryPal.PantryPal.model.Category;
+
 public class PantryItemDTO {
     private Long id;
     private Long userId;
     private String name;
-    private String category;
+    private Category category;
     private Double quantity;
     private String unit;
 
@@ -32,11 +34,11 @@ public class PantryItemDTO {
         this.name = name;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

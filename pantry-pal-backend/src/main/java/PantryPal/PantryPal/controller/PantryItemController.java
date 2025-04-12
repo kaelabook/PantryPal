@@ -2,46 +2,61 @@ package PantryPal.PantryPal.controller;
 
 import PantryPal.PantryPal.dto.PantryItemDTO;
 import PantryPal.PantryPal.service.PantryItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/pantry")
+@RequestMapping("/api/pantry-items")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PantryItemController {
     private final PantryItemService pantryItemService;
 
-    @Autowired
     public PantryItemController(PantryItemService pantryItemService) {
         this.pantryItemService = pantryItemService;
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PantryItemDTO>> getPantryItemsForUser(@PathVariable Long userId) {
-        List<PantryItemDTO> items = pantryItemService.getPantryItemsForUser(userId);
+    @GetMapping
+    public ResponseEntity<List<PantryItemDTO>> getAllItems() {
+        List<PantryItemDTO> items = pantryItemService.getAllItems();
         return ResponseEntity.ok(items);
     }
 
-    @PostMapping
-    public ResponseEntity<PantryItemDTO> addPantryItem(@RequestBody PantryItemDTO itemDTO) {
-        PantryItemDTO addedItem = pantryItemService.addPantryItem(itemDTO);
-        return ResponseEntity.ok(addedItem);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PantryItemDTO>> getAllItemsForUser(@PathVariable Long userId) {
+        List<PantryItemDTO> items = pantryItemService.getAllItemsForUser(userId);
+        return ResponseEntity.ok(items);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PantryItemDTO> getItemById(@PathVariable Long id) {
+        PantryItemDTO item = pantryItemService.getItemById(id);
+        return ResponseEntity.ok(item);
+    }
+
+    @PostMapping
+    public ResponseEntity<PantryItemDTO> createItem(@RequestBody PantryItemDTO pantryItemDTO) {
+        try {
+            PantryItemDTO createdItem = pantryItemService.createItem(pantryItemDTO);
+            return ResponseEntity.ok(createdItem);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
     @PutMapping("/{id}")
-    public ResponseEntity<PantryItemDTO> updatePantryItem(
+    public ResponseEntity<PantryItemDTO> updateItem(
             @PathVariable Long id,
-            @RequestBody PantryItemDTO itemDTO) {
-        PantryItemDTO updatedItem = pantryItemService.updatePantryItem(id, itemDTO);
+            @RequestBody PantryItemDTO pantryItemDTO) {
+        PantryItemDTO updatedItem = pantryItemService.updateItem(id, pantryItemDTO);
         return ResponseEntity.ok(updatedItem);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePantryItem(@PathVariable Long id) {
-        pantryItemService.deletePantryItem(id);
+    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+        pantryItemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
 }

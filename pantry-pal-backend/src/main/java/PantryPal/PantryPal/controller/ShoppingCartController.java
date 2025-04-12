@@ -2,7 +2,6 @@ package PantryPal.PantryPal.controller;
 
 import PantryPal.PantryPal.dto.ShoppingCartDTO;
 import PantryPal.PantryPal.service.ShoppingCartService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
-    @Autowired
     public ShoppingCartController(ShoppingCartService shoppingCartService) {
         this.shoppingCartService = shoppingCartService;
     }
@@ -26,9 +24,14 @@ public class ShoppingCartController {
 
     @PostMapping
     public ResponseEntity<ShoppingCartDTO> addToCart(@RequestBody ShoppingCartDTO cartDTO) {
+    try {
         ShoppingCartDTO addedItem = shoppingCartService.addToCart(cartDTO);
         return ResponseEntity.ok(addedItem);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().build();
     }
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ShoppingCartDTO> updateCartItem(

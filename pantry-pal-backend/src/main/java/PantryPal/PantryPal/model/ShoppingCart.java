@@ -17,7 +17,7 @@ public class ShoppingCart {
     private String unit;
 
     @Enumerated(EnumType.STRING)
-    private String category;
+    private Category category;
 
     public Long getId() {
         return id;
@@ -59,11 +59,11 @@ public class ShoppingCart {
         this.unit = unit;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 }

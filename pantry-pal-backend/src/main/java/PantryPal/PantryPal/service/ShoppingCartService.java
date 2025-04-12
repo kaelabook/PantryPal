@@ -1,9 +1,9 @@
 package PantryPal.PantryPal.service;
 
 import PantryPal.PantryPal.dto.ShoppingCartDTO;
+import PantryPal.PantryPal.model.Category;
 import PantryPal.PantryPal.model.ShoppingCart;
 import PantryPal.PantryPal.repository.ShoppingCartRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
 
-    @Autowired
     public ShoppingCartService(ShoppingCartRepository shoppingCartRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
     }
@@ -31,7 +30,7 @@ public class ShoppingCartService {
         cartItem.setName(cartDTO.getName());
         cartItem.setQuantity(cartDTO.getQuantity());
         cartItem.setUnit(cartDTO.getUnit());
-        cartItem.setCategory(cartDTO.getCategory());
+        cartItem.setCategory(Category.valueOf(cartDTO.getCategory().name()));
 
         ShoppingCart savedItem = shoppingCartRepository.save(cartItem);
         return convertToDTO(savedItem);
