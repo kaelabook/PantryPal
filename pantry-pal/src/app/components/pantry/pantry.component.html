@@ -1,0 +1,98 @@
+<div class="pantry-container">
+  <app-navbar></app-navbar>
+
+  <!-- Page Title -->
+  <h1 class="center-heading">Your Pantry</h1>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="error = null">Dismiss</button>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner-border"></div>
+    <p>Loading pantry items...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading" class="pantry-content">
+    <!-- Search and Filter -->
+    <div class="search-filter-container">
+      <input type="text" class="search-bar" placeholder="Search ingredients..." 
+             [(ngModel)]="searchQuery" (input)="applyFilter()">
+      <select class="filter-dropdown" [(ngModel)]="selectedCategory" (change)="applyFilter()">
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.display }}</option>
+      </select>
+    </div>
+
+    <!-- Add/Edit Form -->
+    <div *ngIf="showIngredientForm" class="popup">
+      <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
+      <form (submit)="saveIngredient()" class="form-container">
+        <div>
+          <label>Name</label>
+          <input type="text" [(ngModel)]="currentIngredient.name" name="name" required>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Category</label>
+            <select [(ngModel)]="currentIngredient.category" name="category">
+              <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.display }}</option>
+            </select>
+          </div>
+          <div>
+            <label>Quantity</label>
+            <input type="number" [(ngModel)]="currentIngredient.quantity" name="quantity" min="1" step="0.1" required>
+          </div>
+          <div>
+            <label>Unit</label>
+            <input type="text" [(ngModel)]="currentIngredient.unit" name="unit">
+          </div>
+        </div>
+        <div class="submit-row">
+          <button type="button" (click)="showIngredientForm = false">Cancel</button>
+          <button type="submit">{{ isEditing ? 'Update' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Pantry Items Table -->
+    <div *ngIf="filteredIngredients.length > 0; else noItems" class="table-scroll-container">
+      <table class="pantry-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredIngredients; let i = index">
+            <td>{{ item.name }}</td>
+            <td>{{ getCategoryDisplay(item.category) }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unit }}</td>
+            <td>
+              <button class="edit-button" (click)="editIngredient(i)">Edit</button>
+              <button class="delete-button" (click)="removeIngredient(i)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noItems>
+      <div class="no-items-message">
+        No pantry items found. Add your first item using the "+" button below.
+      </div>
+    </ng-template>
+
+    <!-- Floating Add Button -->
+    <button class="floating-button" (click)="toggleFoodForm()">+</button>
+  </div>
+</div>

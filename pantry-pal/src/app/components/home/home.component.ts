@@ -5,7 +5,7 @@ import { NavbarComponent } from '../navbar/navbar.component';  // Import NavbarC
 @Component({
   selector: 'app-home',
   standalone: true,  // Keep this for standalone component
-  imports: [CommonModule, NavbarComponent],  // Import CommonModule and NavbarComponent
+  imports: [CommonModule, NavbarComponent,],  // Import CommonModule and NavbarComponent
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
