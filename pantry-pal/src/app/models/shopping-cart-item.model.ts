@@ -4,5 +4,4 @@ export interface ShoppingCartItem {
   quantity: number;
   unit: string;
   category: string;
-  userId: number;
 }

@@ -1,26 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { Observable, catchError, of, tap } from 'rxjs';
 import { PantryItem } from '../models/pantry-item.model';
 
 @Injectable({ providedIn: 'root' })
 export class PantryService {
-  private apiUrl = '/api/pantry-items';
+  private apiUrl = 'http://localhost:8080/api/pantry-items';
 
   constructor(private http: HttpClient) { }
 
-  getAllItems(userId: number): Observable<PantryItem[]> {
-    return this.http.get<PantryItem[]>(`${this.apiUrl}/user/${userId}`).pipe(
-      tap(data => console.log('Received data:', data)), // Add this to debug
-      catchError(error => {
-        console.error('API Error:', error);
-        return of([]); // Return empty array instead of failing
-      })
-    );
-  }
-
-  getAllItemsForUser(userId: number): Observable<PantryItem[]> {
-    return this.http.get<PantryItem[]>(`${this.apiUrl}/user/${userId}`).pipe(
+  getAllItems(): Observable<PantryItem[]> {
+    return this.http.get<PantryItem[]>(this.apiUrl).pipe(
+      tap(data => console.log('Fetched pantry items:', data)),
       catchError(this.handleError)
     );
   }
@@ -32,39 +23,28 @@ export class PantryService {
   }
 
   addItem(item: PantryItem): Observable<PantryItem> {
-    const payload = {
-      ...item,
-      category: item.category.toUpperCase() // Force uppercase
-    };
-    return this.http.post<PantryItem>(this.apiUrl, payload);
+    return this.http.post<PantryItem>(this.apiUrl, item).pipe(
+      tap(newItem => console.log('Added item:', newItem)),
+      catchError(this.handleError)
+    );
   }
 
   updateItem(id: number, item: PantryItem): Observable<PantryItem> {
     return this.http.put<PantryItem>(`${this.apiUrl}/${id}`, item).pipe(
+      tap(updatedItem => console.log('Updated item:', updatedItem)),
       catchError(this.handleError)
     );
   }
 
   deleteItem(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => console.log('Deleted item ID:', id)),
       catchError(this.handleError)
     );
   }
 
-  private handleError(error: any) {
-    let errorMessage = 'An error occurred';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      if (error.error) {
-        errorMessage += `\nDetails: ${JSON.stringify(error.error)}`;
-      }
-    }
-    console.error(errorMessage);
-    // Return a user-friendly error message
-    return throwError(() => new Error('Failed to load data. Please try again later.'));
+  private handleError(error: HttpErrorResponse) {
+    console.error('PantryService error:', error);
+    return of([] as any);
   }
 }

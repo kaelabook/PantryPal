@@ -1,45 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Add this import
-import { CommonModule } from '@angular/common'; // Also good to have
 import { ShoppingCartService } from '../../services/shopping-cart.service';
 import { PantryService } from '../../services/pantry.service';
 import { ShoppingCartItem } from '../../models/shopping-cart-item.model';
 import { PantryItem } from '../../models/pantry-item.model';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-cart',
-  standalone: true, // Make sure this is true for standalone components
-  imports: [CommonModule, FormsModule, NavbarComponent], // Add FormsModule here
+  standalone: true,
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.css']
 })
 export class ShoppingCartComponent implements OnInit {
-  // Data
   allIngredients: PantryItem[] = [];
   filteredIngredients: PantryItem[] = [];
   cartItems: ShoppingCartItem[] = [];
   filteredCartItems: ShoppingCartItem[] = [];
-  
-  // Form states
   showItemForm = false;
   isEditing = false;
   editingIndex: number | null = null;
   currentItem: ShoppingCartItem = this.createEmptyItem();
-  
-  // Filters
   searchQuery = '';
   selectedCategory = '';
   cartSearchQuery = '';
   selectedCartCategory = '';
   
-  // Constants
   categories = [
     'Fruits', 'Vegetables', 'Grains', 'Protein', 
     'Dairy', 'Seasonings', 'Substitutions', 'Miscellaneous'
   ];
-  
-  userId = 1; // Replace with actual user ID from auth service
 
   constructor(
     private cartService: ShoppingCartService,
@@ -52,76 +44,65 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   loadIngredients(): void {
-    this.pantryService.getAllItemsForUser(this.userId).subscribe({
-      next: (items) => {
+    this.pantryService.getAllItems().subscribe({
+      next: (items: PantryItem[]) => {
         this.allIngredients = items;
         this.filteredIngredients = [...items];
       },
-      error: (err) => console.error('Error loading ingredients:', err)
+      error: (err: Error) => console.error('Error loading ingredients:', err)
     });
   }
 
   loadCartItems(): void {
-    this.cartService.getAllItems(this.userId).subscribe({
-      next: (items) => {
+    this.cartService.getAllItems().subscribe({
+      next: (items: ShoppingCartItem[]) => {
         this.cartItems = items;
         this.filteredCartItems = [...items];
       },
-      error: (err) => console.error('Error loading cart items:', err)
+      error: (err: Error) => console.error('Error loading cart items:', err)
     });
   }
 
-  // Filter methods
-  applySearchFilter(): void {
+  // Add these missing filter methods:
+  applyFilter(): void {
     this.filteredIngredients = this.allIngredients.filter(item =>
       item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
       (this.selectedCategory ? item.category === this.selectedCategory : true)
     );
   }
 
-  applyFilter(): void {
-    this.applySearchFilter();
-  }
-
-  applyCartSearchFilter(): void {
+  applyCartFilter(): void {
     this.filteredCartItems = this.cartItems.filter(item =>
       item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase()) &&
       (this.selectedCartCategory ? item.category === this.selectedCartCategory : true)
     );
   }
 
-  applyCartFilter(): void {
-    this.applyCartSearchFilter();
+  // These methods can be used as aliases for template binding
+  applySearchFilter(): void {
+    this.applyFilter();
   }
 
-  // Item management
+  applyCartSearchFilter(): void {
+    this.applyCartFilter();
+  }
+
+  // Rest of your existing methods...
   addToCart(ingredient: PantryItem): void {
     const cartItem: ShoppingCartItem = {
-      id: -1, // Temporary ID
+      id: -1,
       name: ingredient.name,
       quantity: ingredient.quantity,
       unit: ingredient.unit,
-      category: ingredient.category,
-      userId: this.userId
+      category: ingredient.category
     };
   
     this.cartService.addItem(cartItem).subscribe({
-      next: (savedItem) => {
-        // The savedItem will have the real ID from backend
-        this.loadCartItems();
-      },
-      error: (err) => console.error('Error adding to cart:', err)
-    });
-  }
-
-  removeItem(id: number): void {
-    this.cartService.deleteItem(id).subscribe({
       next: () => this.loadCartItems(),
-      error: (err) => console.error('Error removing item:', err)
+      error: (err: Error) => console.error('Error adding to cart:', err)
     });
   }
 
-  // Form handling
   toggleItemForm(): void {
     this.showItemForm = !this.showItemForm;
     if (!this.showItemForm) {
@@ -130,28 +111,25 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   saveItem(): void {
-    if (this.isEditing) {
-      if (!this.currentItem.id) return;
+    if (this.isEditing && this.currentItem.id) {
       this.cartService.updateItem(this.currentItem.id, this.currentItem).subscribe({
         next: () => {
           this.loadCartItems();
           this.toggleItemForm();
         },
-        error: (err) => console.error('Error updating item:', err)
+        error: (err: Error) => console.error('Error updating item:', err)
       });
     } else {
-      this.currentItem.userId = this.userId;
       this.cartService.addItem(this.currentItem).subscribe({
         next: () => {
           this.loadCartItems();
           this.toggleItemForm();
         },
-        error: (err) => console.error('Error adding item:', err)
+        error: (err: Error) => console.error('Error adding item:', err)
       });
     }
   }
 
-  // Edit functionality
   startEditing(index: number): void {
     this.editingIndex = index;
   }
@@ -164,33 +142,37 @@ export class ShoppingCartComponent implements OnInit {
           this.editingIndex = null;
           this.loadCartItems();
         },
-        error: (err) => console.error('Error updating item:', err)
+        error: (err: Error) => console.error('Error updating item:', err)
       });
     }
   }
 
-  // Checkout
+  removeItem(id: number): void {
+    if (!confirm('Remove this item?')) return;
+    this.cartService.deleteItem(id).subscribe({
+      next: () => this.loadCartItems(),
+      error: (err: Error) => console.error('Error removing item:', err)
+    });
+  }
+
   checkout(): void {
-    if (confirm('Are you sure you want to checkout?')) {
-      this.cartService.checkout(this.userId).subscribe({
-        next: () => {
-          alert('Checkout completed successfully!');
-          this.loadCartItems();
-        },
-        error: (err) => console.error('Error during checkout:', err)
-      });
-    }
+    if (!confirm('Proceed to checkout?')) return;
+    this.cartService.checkout().subscribe({
+      next: () => {
+        alert('Checkout completed!');
+        this.loadCartItems();
+      },
+      error: (err: Error) => console.error('Checkout error:', err)
+    });
   }
 
-  // Helpers
   private createEmptyItem(): ShoppingCartItem {
     return {
-      id: -1, // Temporary ID, will be replaced by backend
+      id: -1,
       name: '',
       quantity: 1,
       unit: '',
-      category: 'Fruits',
-      userId: this.userId
+      category: 'Fruits'
     };
   }
 

@@ -4,20 +4,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserId: number | null = 1;
+  private currentUserId: number | null = null; // Start as null
 
-  setCurrentUser(userId: number): void {
+  setCurrentUser(userId: number | null): void {
     this.currentUserId = userId;
   }
 
-  getCurrentUserId(): number {
-    if (this.currentUserId === null) {
-      throw new Error('User not authenticated');
-    }
-    return this.currentUserId;
+  getCurrentUserId(): number | null {
+    return this.currentUserId; // Return null if not authenticated
   }
 
-  // Add more authentication methods as needed
   isAuthenticated(): boolean {
     return this.currentUserId !== null;
   }

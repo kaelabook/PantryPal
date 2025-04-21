@@ -8,7 +8,6 @@ export interface RecipeIngredient {
 
 export interface Recipe {
   id?: number;
-  userId?: number;
   name: string;
   description: string;
   cookTime: number;

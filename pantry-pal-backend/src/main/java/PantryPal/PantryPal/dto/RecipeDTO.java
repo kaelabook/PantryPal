@@ -1,5 +1,6 @@
 package PantryPal.PantryPal.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class RecipeDTO {
@@ -11,77 +12,37 @@ public class RecipeDTO {
     private Integer servings;
     private String instructions;
     private List<RecipeIngredientDTO> ingredients;
-    private Long userId;
 
-    public Long getId() {
-        return id;
-    }
+    // Getters and setters with @JsonProperty
+    @JsonProperty("id")
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @JsonProperty("name")
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    @JsonProperty("description")
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @JsonProperty("cookTime")
+    public Integer getCookTime() { return cookTime; }
+    public void setCookTime(Integer cookTime) { this.cookTime = cookTime; }
 
-    public String getDescription() {
-        return description;
-    }
+    @JsonProperty("temperature")
+    public Integer getTemperature() { return temperature; }
+    public void setTemperature(Integer temperature) { this.temperature = temperature; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @JsonProperty("servings")
+    public Integer getServings() { return servings; }
+    public void setServings(Integer servings) { this.servings = servings; }
 
-    public Integer getCookTime() {
-        return cookTime;
-    }
+    @JsonProperty("instructions")
+    public String getInstructions() { return instructions; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
 
-    public void setCookTime(Integer cookTime) {
-        this.cookTime = cookTime;
-    }
-
-    public Integer getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Integer temperature) {
-        this.temperature = temperature;
-    }
-
-    public Integer getServings() {
-        return servings;
-    }
-
-    public void setServings(Integer servings) {
-        this.servings = servings;
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
-    public List<RecipeIngredientDTO> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<RecipeIngredientDTO> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+    @JsonProperty("ingredients")
+    public List<RecipeIngredientDTO> getIngredients() { return ingredients; }
+    public void setIngredients(List<RecipeIngredientDTO> ingredients) { this.ingredients = ingredients; }
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
+import { PantryService } from '../../services/pantry.service';
 import { Recipe, RecipeIngredient } from '../../models/recipe.model';
+import { PantryItem } from '../../models/pantry-item.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { AuthService } from '../../services/auth.service';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-recipes',
@@ -17,11 +18,20 @@ export class RecipesComponent implements OnInit {
   showRecipeForm = false;
   isEditing = false;
   selectedRecipe: Recipe | null = null;
-  savedRecipes: Recipe[] = []; // Initialize as empty array
+  savedRecipes: Recipe[] = [];
   isLoading = false;
   errorMessage = '';
-  userId: number | null = null; // Properly declare userId
-  
+  pantryItems: PantryItem[] = [];
+  filteredPantryItems: PantryItem[] = [];
+  activeIngredientIndex: number | null = null;
+
+  showCookConfirmation = false;
+  cookData = {
+    recipe: {} as Recipe,
+    pantryItems: [] as {name: string, quantity: number, unit: string}[],
+    missingItems: [] as {name: string, quantity: number, unit: string}[]
+  };
+
   currentRecipe: Recipe = {
     name: '',
     description: '',
@@ -34,44 +44,42 @@ export class RecipesComponent implements OnInit {
 
   constructor(
     private recipeService: RecipeService,
-    private authService: AuthService
+    private pantryService: PantryService
   ) {}
 
   ngOnInit(): void {
     this.loadRecipes();
+    this.loadPantryItems();
   }
 
   loadRecipes(): void {
     this.isLoading = true;
     this.errorMessage = '';
     
-    try {
-      this.userId = this.authService.getCurrentUserId();
-      
-      if (!this.userId) {
-        throw new Error('User not authenticated');
+    this.recipeService.getAllRecipes().subscribe({
+      next: (recipes) => {
+        console.log('Received recipes:', recipes);
+        this.savedRecipes = recipes || [];
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading recipes:', err);
+        this.errorMessage = 'Failed to load recipes';
+        this.isLoading = false;
       }
-
-      this.recipeService.getAllRecipes(this.userId).subscribe({
-        next: (recipes) => {
-          this.savedRecipes = recipes || []; // Ensure it's never undefined
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Error loading recipes:', err);
-          this.errorMessage = 'Failed to load recipes';
-          this.isLoading = false;
-          this.savedRecipes = []; // Reset to empty array on error
-        }
-      });
-    } catch (err) {
-      console.error('Authentication error:', err);
-      this.errorMessage = err instanceof Error ? err.message : 'Authentication failed';
-      this.isLoading = false;
-    }
+    });
   }
 
-  // ... rest of your methods remain unchanged ...
+  loadPantryItems(): void {
+    this.pantryService.getAllItems().subscribe({
+      next: (items) => {
+        this.pantryItems = items;
+        this.filteredPantryItems = [...items];
+      },
+      error: (err) => console.error('Error loading pantry items:', err)
+    });
+  }
+
   toggleRecipeForm(): void {
     this.showRecipeForm = !this.showRecipeForm;
     if (!this.showRecipeForm) {
@@ -95,12 +103,6 @@ export class RecipesComponent implements OnInit {
 
   saveRecipe(): void {
     if (!this.validateRecipe()) return;
-    if (!this.userId) {
-      this.errorMessage = 'User not authenticated';
-      return;
-    }
-
-    this.currentRecipe.userId = this.userId;
 
     const operation = this.isEditing
       ? this.recipeService.updateRecipe(this.currentRecipe.id!, this.currentRecipe)
@@ -119,17 +121,79 @@ export class RecipesComponent implements OnInit {
   }
 
   deleteRecipe(recipe: Recipe): void {
-    if (!recipe.id) return;
+    if (!recipe.id || !confirm('Are you sure you want to delete this recipe?')) return;
     
-    if (confirm('Are you sure you want to delete this recipe?')) {
-      this.recipeService.deleteRecipe(recipe.id).subscribe({
-        next: () => this.loadRecipes(),
-        error: (err) => {
-          console.error('Error deleting recipe:', err);
-          this.errorMessage = 'Failed to delete recipe';
+    this.recipeService.deleteRecipe(recipe.id).subscribe({
+      next: () => this.loadRecipes(),
+      error: (err) => {
+        console.error('Error deleting recipe:', err);
+        this.errorMessage = 'Failed to delete recipe';
+      }
+    });
+  }
+
+  async prepareCookRecipe(recipe: Recipe): Promise<void> {
+    try {
+      const pantryItems = await this.pantryService.getAllItems().toPromise();
+      if (!pantryItems) throw new Error('Failed to load pantry items');
+      
+      this.cookData = {
+        recipe: {...recipe},
+        pantryItems: [],
+        missingItems: []
+      };
+
+      recipe.ingredients.forEach(ingredient => {
+        const pantryItem = pantryItems.find(item => 
+          item.name.toLowerCase() === ingredient.name.toLowerCase()
+        );
+        
+        if (pantryItem && pantryItem.quantity >= ingredient.quantity) {
+          this.cookData.pantryItems.push({
+            name: ingredient.name,
+            quantity: ingredient.quantity,
+            unit: ingredient.unit
+          });
+        } else {
+          const neededQty = pantryItem ? 
+            Math.max(ingredient.quantity - pantryItem.quantity, 0) : 
+            ingredient.quantity;
+          
+          if (neededQty > 0) {
+            this.cookData.missingItems.push({
+              name: ingredient.name,
+              quantity: neededQty,
+              unit: ingredient.unit
+            });
+          }
         }
       });
+
+      this.showCookConfirmation = true;
+    } catch (err) {
+      console.error('Error preparing cook:', err);
+      this.errorMessage = err instanceof Error ? err.message : 'Failed to prepare cooking';
     }
+  }
+
+  executeCookRecipe(): void {
+    if (!this.cookData.recipe.id) {
+      this.errorMessage = 'Invalid recipe';
+      return;
+    }
+
+    this.recipeService.cookRecipe(this.cookData.recipe.id).subscribe({
+      next: () => {
+        this.showCookConfirmation = false;
+        alert(`Successfully cooked ${this.cookData.recipe.name}!`);
+        this.loadPantryItems();
+      },
+      error: (err) => {
+        console.error('Error cooking recipe:', err);
+        this.errorMessage = 'Failed to cook recipe';
+        this.showCookConfirmation = false;
+      }
+    });
   }
 
   addIngredient(): void {
@@ -144,6 +208,26 @@ export class RecipesComponent implements OnInit {
     this.currentRecipe.ingredients.splice(index, 1);
   }
 
+  filterPantryItems(searchTerm: string, index: number): void {
+    this.activeIngredientIndex = index;
+    if (!searchTerm) {
+      this.filteredPantryItems = [...this.pantryItems];
+      return;
+    }
+    this.filteredPantryItems = this.pantryItems.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  selectPantryItem(item: PantryItem): void {
+    if (this.activeIngredientIndex !== null) {
+      this.currentRecipe.ingredients[this.activeIngredientIndex].name = item.name;
+      this.currentRecipe.ingredients[this.activeIngredientIndex].unit = item.unit || '';
+      this.filteredPantryItems = [];
+      this.activeIngredientIndex = null;
+    }
+  }
+
   private validateRecipe(): boolean {
     if (!this.currentRecipe.name.trim()) {
       this.errorMessage = 'Recipe name is required';
@@ -151,6 +235,10 @@ export class RecipesComponent implements OnInit {
     }
     if (this.currentRecipe.ingredients.some(ing => !ing.name.trim())) {
       this.errorMessage = 'All ingredients must have names';
+      return false;
+    }
+    if (!this.currentRecipe.instructions.trim()) {
+      this.errorMessage = 'Instructions are required';
       return false;
     }
     this.errorMessage = '';
@@ -168,6 +256,7 @@ export class RecipesComponent implements OnInit {
       ingredients: [],
       instructions: ''
     };
-    this.errorMessage = '';
+    this.filteredPantryItems = [];
+    this.activeIngredientIndex = null;
   }
 }
