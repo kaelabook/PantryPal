@@ -52,5 +52,5 @@ public class ShoppingCartController {
     public ResponseEntity<Void> checkout() {
     shoppingCartService.checkout();
     return ResponseEntity.ok().build();
-}
+    }
 }

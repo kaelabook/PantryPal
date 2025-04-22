@@ -49,4 +49,11 @@ export class RecipeService {
     console.error('RecipeService error:', error);
     return throwError(() => new Error('Failed to process recipe operation'));
   }
+
+  getRecipe(id: number): Observable<Recipe> {
+    return this.http.get<Recipe>(`${this.apiUrl}/${id}`).pipe(
+      tap(r => console.log('Fetched recipe:', r)),
+      catchError(this.handleError)
+    );
+  }
 }

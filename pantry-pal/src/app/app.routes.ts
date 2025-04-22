@@ -9,5 +9,6 @@ export const routes: Routes = [
   { path: 'pantry', component: PantryComponent },
   { path: 'recipes', component: RecipesComponent },
   { path: 'shopping-cart', component: ShoppingCartComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'view-recipe/:id', component: RecipesComponent, data: { viewMode: true } }
 ];

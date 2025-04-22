@@ -2,7 +2,7 @@ export interface PantryItem {
   id?: number;
   userId?: number;
   name: string;
-  category: string; // This should match the enum values from backend
+  category: string;
   quantity: number;
   unit: string;
 }

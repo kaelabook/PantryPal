@@ -38,11 +38,11 @@ export class ShoppingCartService {
   }
 
   checkout(): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/clear`, {}).pipe(
-      tap(() => console.log('Checkout completed')),
-      catchError(this.handleError)
+    return this.http.post<void>(`${this.apiUrl}/checkout`, {}).pipe(
+        tap(() => console.log('Checkout completed')),
+        catchError(this.handleError)
     );
-  }
+}
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('ShoppingCartService error:', error);
