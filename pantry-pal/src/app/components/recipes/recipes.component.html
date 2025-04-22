@@ -30,7 +30,9 @@
       <div class="button-group">
         <button class="view-btn" (click)="viewRecipe(recipe)">View</button>
         <button class="edit-btn" (click)="editRecipe(recipe)">Edit</button>
-        <button class="cook-btn" (click)="prepareCookRecipe(recipe)">Cook</button>
+        <button class="cook-btn" (click)="prepareCookRecipe(recipe)">
+          {{ recipe.ingredients.length === 0 ? 'Cook' : 'Prepare to Cook' }}
+        </button>
         <button class="share-btn" (click)="shareRecipe(recipe)">Share</button>
         <button class="delete-btn" (click)="deleteRecipe(recipe)">Delete</button>
       </div>
@@ -63,7 +65,9 @@
 
     <div class="button-group">
       <button (click)="closeRecipeView()">Close</button>
-      <button class="cook-btn" (click)="prepareCookRecipe(selectedRecipe)">Cook This Recipe</button>
+      <button class="cook-btn" (click)="prepareCookRecipe(selectedRecipe)">
+        {{ selectedRecipe.ingredients.length === 0 ? 'Cook This Recipe' : 'Prepare to Cook' }}
+      </button>
     </div>
   </div>
 </div>
@@ -71,31 +75,44 @@
 <!-- Cook Confirmation Popup -->
 <div class="popup" *ngIf="showCookConfirmation">
   <div class="dialog">
-    <h2>Cooking {{ cookData.recipe.name }}!</h2>
+    <h2>Preparing to Cook {{ cookData.recipe.name }}</h2>
 
-    <p class="cook-message">{{ cookData.message }}</p>
+    <div class="cook-instructions" *ngIf="cookData.missingItems.length > 0">
+      <p><strong>⚠️ Action Required:</strong> You're missing some ingredients.</p>
+      <p>We'll add these to your shopping cart. When you have all ingredients, you can cook the recipe from your pantry.</p>
+    </div>
+
+    <div class="cook-instructions" *ngIf="cookData.missingItems.length === 0">
+      <p><strong>✓ Ready to cook!</strong> All ingredients are available.</p>
+      <p>Click "Cook Recipe" to proceed.</p>
+    </div>
 
     <div *ngIf="cookData.pantryItems.length">
-      <h3>Items to be used from pantry:</h3>
+      <h3>Available in Pantry:</h3>
       <ul>
         <li *ngFor="let item of cookData.pantryItems">
-          {{ item.name }} - {{ item.quantity }} {{ item.unit }}
+          ✓ {{ item.name }} ({{ item.quantity }} {{ item.unit }})
         </li>
       </ul>
     </div>
 
     <div *ngIf="cookData.missingItems.length" class="missing-items">
-      <h3>Items to be added to shopping cart:</h3>
+      <h3>Missing Ingredients:</h3>
       <ul>
         <li *ngFor="let item of cookData.missingItems">
-          {{ item.name }} - {{ item.quantity }} {{ item.unit }}
+          ✗ {{ item.name }} ({{ item.quantity }} {{ item.unit }} needed)
         </li>
       </ul>
     </div>
 
     <div class="button-group">
       <button (click)="showCookConfirmation = false">Cancel</button>
-      <button class="confirm-btn" (click)="executeCookRecipe()">Confirm</button>
+      <button 
+        class="confirm-btn" 
+        (click)="executeCookRecipe()"
+      >
+        {{ cookData.missingItems.length > 0 ? 'Add Missing Items to Cart' : 'Cook Recipe Now' }}
+      </button>
     </div>
   </div>
 </div>

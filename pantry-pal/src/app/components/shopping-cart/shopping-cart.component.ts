@@ -29,8 +29,14 @@ export class ShoppingCartComponent implements OnInit {
   selectedCartCategory = '';
   
   categories = [
-    'Fruits', 'Vegetables', 'Grains', 'Protein', 
-    'Dairy', 'Seasonings', 'Substitutions', 'Miscellaneous'
+    { value: 'FRUITS', display: 'Fruits' },
+    { value: 'VEGETABLES', display: 'Vegetables' },
+    { value: 'GRAINS', display: 'Grains' },
+    { value: 'PROTEIN', display: 'Protein' },
+    { value: 'DAIRY', display: 'Dairy' },
+    { value: 'SEASONINGS', display: 'Seasonings' },
+    { value: 'SUBSTITUTIONS', display: 'Substitutions' },
+    { value: 'MISC', display: 'Miscellaneous' }
   ];
 
   constructor(
@@ -56,8 +62,11 @@ export class ShoppingCartComponent implements OnInit {
   loadCartItems(): void {
     this.cartService.getAllItems().subscribe({
       next: (items: ShoppingCartItem[]) => {
-        this.cartItems = items;
-        this.filteredCartItems = [...items];
+        this.cartItems = items.map(item => ({
+          ...item,
+          category: item.category.toUpperCase() // Normalize to uppercase
+        }));
+        this.filteredCartItems = [...this.cartItems];
       },
       error: (err: Error) => console.error('Error loading cart items:', err)
     });
@@ -65,17 +74,34 @@ export class ShoppingCartComponent implements OnInit {
 
   // Add these missing filter methods:
   applyFilter(): void {
-    this.filteredIngredients = this.allIngredients.filter(item =>
-      item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
-      (this.selectedCategory ? item.category === this.selectedCategory : true)
-    );
+    this.filteredIngredients = this.allIngredients.filter(item => {
+      const nameMatch = this.searchQuery === '' || 
+          item.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+      
+      const categoryMatch = this.selectedCategory === '' || 
+          item.category.toUpperCase() === this.selectedCategory.toUpperCase() ||
+          this.getCategoryDisplay(item.category).toUpperCase() === this.selectedCategory.toUpperCase();
+      
+      return nameMatch && categoryMatch;
+    });
   }
-
+  
   applyCartFilter(): void {
-    this.filteredCartItems = this.cartItems.filter(item =>
-      item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase()) &&
-      (this.selectedCartCategory ? item.category === this.selectedCartCategory : true)
-    );
+    this.filteredCartItems = this.cartItems.filter(item => {
+      const nameMatch = this.cartSearchQuery === '' || 
+          item.name.toLowerCase().includes(this.cartSearchQuery.toLowerCase());
+      
+      const categoryMatch = this.selectedCartCategory === '' || 
+          item.category.toUpperCase() === this.selectedCartCategory.toUpperCase() ||
+          this.getCategoryDisplay(item.category).toUpperCase() === this.selectedCartCategory.toUpperCase();
+      
+      return nameMatch && categoryMatch;
+    });
+  }
+  
+  getCategoryDisplay(categoryValue: string): string {
+    const found = this.categories.find(c => c.value === categoryValue);
+    return found?.display || categoryValue;
   }
 
   // These methods can be used as aliases for template binding

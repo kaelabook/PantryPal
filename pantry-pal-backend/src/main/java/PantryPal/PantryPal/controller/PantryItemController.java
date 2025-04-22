@@ -1,6 +1,7 @@
 package PantryPal.PantryPal.controller;
 
 import PantryPal.PantryPal.dto.PantryItemDTO;
+import PantryPal.PantryPal.model.Category;
 import PantryPal.PantryPal.service.PantryItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,16 +35,21 @@ public class PantryItemController {
         return ResponseEntity.ok(item);
     }
 
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<PantryItemDTO>> getItemsByCategory(@PathVariable Category category) {
+        List<PantryItemDTO> items = pantryItemService.getItemsByCategory(category);
+        return ResponseEntity.ok(items);
+}
+
     @PostMapping
     public ResponseEntity<PantryItemDTO> createItem(@RequestBody PantryItemDTO pantryItemDTO) {
         try {
-            PantryItemDTO createdItem = pantryItemService.createItem(pantryItemDTO);
+            PantryItemDTO createdItem = pantryItemService.createOrUpdateItem(pantryItemDTO);
             return ResponseEntity.ok(createdItem);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<PantryItemDTO> updateItem(

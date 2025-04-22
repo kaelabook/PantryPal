@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
-import { Recipe, RecipeIngredient } from '../models/recipe.model';
+import { Recipe } from '../models/recipe.model';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
@@ -13,6 +13,13 @@ export class RecipeService {
     return this.http.get<Recipe[]>(this.apiUrl).pipe(
       tap(response => console.log('Fetched recipes:', response)),
       map(response => Array.isArray(response) ? response : []),
+      catchError(this.handleError)
+    );
+  }
+
+  getRecipe(id: number): Observable<Recipe> {
+    return this.http.get<Recipe>(`${this.apiUrl}/${id}`).pipe(
+      tap(r => console.log('Fetched recipe:', r)),
       catchError(this.handleError)
     );
   }
@@ -41,19 +48,19 @@ export class RecipeService {
   cookRecipe(recipeId: number): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${recipeId}/cook`, {}).pipe(
       tap(() => console.log('Cooked recipe ID:', recipeId)),
-      catchError(this.handleError)
+      catchError(error => {
+        console.error('Error cooking recipe:', error);
+        return throwError(() => new Error(
+          error.error?.message || 'Failed to cook recipe. Please try again.'
+        ));
+      })
     );
   }
 
   private handleError(error: HttpErrorResponse) {
     console.error('RecipeService error:', error);
-    return throwError(() => new Error('Failed to process recipe operation'));
-  }
-
-  getRecipe(id: number): Observable<Recipe> {
-    return this.http.get<Recipe>(`${this.apiUrl}/${id}`).pipe(
-      tap(r => console.log('Fetched recipe:', r)),
-      catchError(this.handleError)
-    );
+    return throwError(() => new Error(
+      error.error?.message || 'Failed to process recipe operation'
+    ));
   }
 }

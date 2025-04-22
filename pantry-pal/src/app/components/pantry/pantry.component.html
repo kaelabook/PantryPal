@@ -1,66 +1,41 @@
+<app-navbar></app-navbar>
+
 <div class="pantry-container">
-  <app-navbar></app-navbar>
+  <h2 class="center-heading">My Pantry</h2>
 
-  <!-- Page Title -->
-  <h1 class="center-heading">Your Pantry</h1>
+  <div class="pantry-content">
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+      <button (click)="error = null">×</button>
+    </div>
 
-  <!-- Error Message -->
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-    <button class="btn btn-sm btn-outline-danger ms-2" (click)="error = null">Dismiss</button>
-  </div>
+    <div *ngIf="isLoading" class="loading-spinner">
+      <div class="spinner-border" role="status"></div>
+      <span>Loading...</span>
+    </div>
 
-  <!-- Loading Indicator -->
-  <div *ngIf="isLoading" class="loading-spinner">
-    <div class="spinner-border"></div>
-    <p>Loading pantry items...</p>
-  </div>
+    <div *ngIf="filteredIngredients.length === 0 && !isLoading" class="no-items-message">
+      No ingredients found in your pantry.
+    </div>
 
-  <!-- Main Content -->
-  <div *ngIf="!isLoading" class="pantry-content">
-    <!-- Search and Filter -->
-    <div class="search-filter-container">
-      <input type="text" class="search-bar" placeholder="Search ingredients..." 
-             [(ngModel)]="searchQuery" (input)="applyFilter()">
-      <select class="filter-dropdown" [(ngModel)]="selectedCategory" (change)="applyFilter()">
+    <div *ngIf="!isLoading" class="search-filter-container">
+      <input type="text" [(ngModel)]="searchQuery" 
+             (input)="applyFilter()" 
+             placeholder="Search ingredients..." 
+             class="search-bar">
+      
+      <select [(ngModel)]="selectedCategory" 
+              (change)="applyFilter()" 
+              class="filter-dropdown">
         <option value="">All Categories</option>
-        <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.display }}</option>
+        <option *ngFor="let category of categories" 
+                [value]="category.value">
+          {{category.display}}
+        </option>
       </select>
     </div>
 
-    <!-- Add/Edit Form -->
-    <div *ngIf="showIngredientForm" class="popup">
-      <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
-      <form (submit)="saveIngredient()" class="form-container">
-        <div>
-          <label>Name</label>
-          <input type="text" [(ngModel)]="currentIngredient.name" name="name" required>
-        </div>
-        <div class="form-row">
-          <div>
-            <label>Category</label>
-            <select [(ngModel)]="currentIngredient.category" name="category">
-              <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.display }}</option>
-            </select>
-          </div>
-          <div>
-            <label>Quantity</label>
-            <input type="number" [(ngModel)]="currentIngredient.quantity" name="quantity" min="1" step="0.1" required>
-          </div>
-          <div>
-            <label>Unit</label>
-            <input type="text" [(ngModel)]="currentIngredient.unit" name="unit">
-          </div>
-        </div>
-        <div class="submit-row">
-          <button type="button" (click)="showIngredientForm = false">Cancel</button>
-          <button type="submit">{{ isEditing ? 'Update' : 'Save' }}</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Pantry Items Table -->
-    <div *ngIf="filteredIngredients.length > 0; else noItems" class="table-scroll-container">
+    <div *ngIf="!isLoading && filteredIngredients.length > 0" class="table-scroll-container">
       <table class="pantry-table">
         <thead>
           <tr>
@@ -72,27 +47,71 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredIngredients; let i = index">
-            <td>{{ item.name }}</td>
-            <td>{{ getCategoryDisplay(item.category) }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.unit }}</td>
+          <tr *ngFor="let ingredient of filteredIngredients; let i = index">
+            <td>{{ ingredient.name }}</td>
+            <td>{{ getCategoryDisplay(ingredient.category) }}</td>
+            <td>{{ ingredient.quantity }}</td>
+            <td>{{ ingredient.unit }}</td>
             <td>
-              <button class="edit-button" (click)="editIngredient(i)">Edit</button>
-              <button class="delete-button" (click)="removeIngredient(i)">Delete</button>
+              <button (click)="editIngredient(i)" class="edit-button">Edit</button>
+              <button (click)="removeIngredient(i)" class="delete-button">Delete</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <ng-template #noItems>
-      <div class="no-items-message">
-        No pantry items found. Add your first item using the "+" button below.
-      </div>
-    </ng-template>
+    <button (click)="toggleFoodForm()" class="floating-button">+</button>
+  </div>
 
-    <!-- Floating Add Button -->
-    <button class="floating-button" (click)="toggleFoodForm()">+</button>
+  <!-- Add/Edit Ingredient Form -->
+  <div *ngIf="showIngredientForm" class="popup">
+    <h2>{{ isEditing ? 'Edit' : 'Add' }} Ingredient</h2>
+    
+    <form (ngSubmit)="saveIngredient()" class="form-container">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" 
+               [(ngModel)]="currentIngredient.name" 
+               name="name" required>
+      </div>
+      
+      <div>
+        <label for="category">Category:</label>
+        <select id="category" 
+                [(ngModel)]="currentIngredient.category" 
+                name="category" required>
+          <option *ngFor="let category of categories" 
+                  [value]="category.value">
+            {{category.display}}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-row">
+        <div>
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" 
+                 [(ngModel)]="currentIngredient.quantity" 
+                 name="quantity" min="1" required>
+        </div>
+        
+        <div>
+          <label for="unit">Unit:</label>
+          <input type="text" id="unit" 
+                 [(ngModel)]="currentIngredient.unit" 
+                 name="unit">
+        </div>
+      </div>
+      
+      <div class="submit-row">
+        <button type="button" (click)="toggleFoodForm()" class="cancel-button">
+          Cancel
+        </button>
+        <button type="submit">
+          {{ isEditing ? 'Save' : 'Add' }}
+        </button>
+      </div>
+    </form>
   </div>
 </div>

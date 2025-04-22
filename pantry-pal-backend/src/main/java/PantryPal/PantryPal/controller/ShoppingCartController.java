@@ -1,6 +1,7 @@
 package PantryPal.PantryPal.controller;
 
 import PantryPal.PantryPal.dto.ShoppingCartDTO;
+import PantryPal.PantryPal.model.Category;
 import PantryPal.PantryPal.service.ShoppingCartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,12 @@ public class ShoppingCartController {
         return ResponseEntity.ok(items);
     }
 
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<ShoppingCartDTO>> getCartItemsByCategory(@PathVariable Category category) {
+        List<ShoppingCartDTO> items = shoppingCartService.getItemsByCategory(category);
+        return ResponseEntity.ok(items);
+}
+
     @PostMapping
     public ResponseEntity<ShoppingCartDTO> addToCart(@RequestBody ShoppingCartDTO cartDTO) {
         ShoppingCartDTO addedItem = shoppingCartService.addToCart(cartDTO);
@@ -42,15 +49,9 @@ public class ShoppingCartController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/clear")
-    public ResponseEntity<Void> clearCart() {
-        shoppingCartService.clearCart();
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping("/checkout")
     public ResponseEntity<Void> checkout() {
-    shoppingCartService.checkout();
-    return ResponseEntity.ok().build();
+        shoppingCartService.checkout();
+        return ResponseEntity.ok().build();
     }
 }

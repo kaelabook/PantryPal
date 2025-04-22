@@ -63,9 +63,13 @@ export class PantryComponent implements OnInit {
 
   applyFilter(): void {
     this.filteredIngredients = this.allIngredients.filter(ingredient => {
-      const nameMatch = ingredient.name.toLowerCase().includes(this.searchQuery.toLowerCase());
-      const categoryMatch = !this.selectedCategory || 
-                          ingredient.category === this.selectedCategory;
+      const nameMatch = this.searchQuery === '' || 
+          ingredient.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+      
+      const categoryMatch = this.selectedCategory === '' || 
+          ingredient.category.toUpperCase() === this.selectedCategory.toUpperCase() ||
+          this.getCategoryDisplay(ingredient.category).toUpperCase() === this.selectedCategory.toUpperCase();
+      
       return nameMatch && categoryMatch;
     });
   }

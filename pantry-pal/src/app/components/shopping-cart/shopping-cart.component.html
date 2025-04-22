@@ -12,9 +12,12 @@
         <div class="search-filter-container">
           <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." 
                  (input)="applySearchFilter()" class="search-bar" />
+          <!-- Added category filter dropdown -->
           <select [(ngModel)]="selectedCategory" (change)="applyFilter()" class="filter-dropdown">
             <option value="">All Categories</option>
-            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+            <option *ngFor="let category of categories" [value]="category.value">
+              {{category.display}}
+            </option>
           </select>
         </div>
       </div>
@@ -53,9 +56,13 @@
         <div class="cart-filter-container">
           <input type="text" [(ngModel)]="cartSearchQuery" placeholder="Search Cart..." 
                  (input)="applyCartSearchFilter()" class="search-bar" />
+          <!-- Added category filter dropdown -->
+          
           <select [(ngModel)]="selectedCartCategory" (change)="applyCartFilter()" class="filter-dropdown">
             <option value="">All Categories</option>
-            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+            <option *ngFor="let category of categories" [value]="category.value">
+                {{category.display}}
+            </option>
           </select>
         </div>
       </div>
@@ -112,7 +119,9 @@
 
         <label for="itemCategory">Category:</label>
         <select id="itemCategory" [(ngModel)]="currentItem.category" name="itemCategory" required>
-          <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+          <option *ngFor="let category of categories" [value]="category.value">
+            {{category.display}}
+          </option>
         </select>
       </div>
 
