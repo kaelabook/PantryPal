@@ -6,6 +6,7 @@ import PantryPal.PantryPal.repository.PantryItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,15 +36,29 @@ public class PantryItemService {
     }
 
     public PantryItemDTO createItem(PantryItemDTO pantryItemDTO) {
-        PantryItem pantryItem = new PantryItem();
-        pantryItem.setUserId(pantryItemDTO.getUserId());
-        pantryItem.setName(pantryItemDTO.getName());
-        pantryItem.setCategory(pantryItemDTO.getCategory());
-        pantryItem.setQuantity(pantryItemDTO.getQuantity());
-        pantryItem.setUnit(pantryItemDTO.getUnit());
-
-        PantryItem savedItem = pantryItemRepository.save(pantryItem);
-        return convertToDTO(savedItem);
+        // Check for existing item with same name and unit
+        Optional<PantryItem> existingItem = pantryItemRepository.findByNameAndUnitIgnoreCase(
+            pantryItemDTO.getName(), 
+            pantryItemDTO.getUnit());
+        
+        if (existingItem.isPresent()) {
+            // Update quantity
+            PantryItem item = existingItem.get();
+            item.setQuantity(item.getQuantity() + pantryItemDTO.getQuantity());
+            PantryItem savedItem = pantryItemRepository.save(item);
+            return convertToDTO(savedItem);
+        } else {
+            // Create new item
+            PantryItem pantryItem = new PantryItem();
+            pantryItem.setUserId(pantryItemDTO.getUserId());
+            pantryItem.setName(pantryItemDTO.getName());
+            pantryItem.setCategory(pantryItemDTO.getCategory());
+            pantryItem.setQuantity(pantryItemDTO.getQuantity());
+            pantryItem.setUnit(pantryItemDTO.getUnit());
+            
+            PantryItem savedItem = pantryItemRepository.save(pantryItem);
+            return convertToDTO(savedItem);
+        }
     }
 
     public PantryItemDTO updateItem(Long id, PantryItemDTO pantryItemDTO) {

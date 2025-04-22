@@ -156,13 +156,18 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   checkout(): void {
-    if (!confirm('Proceed to checkout?')) return;
+    if (!confirm('Proceed to checkout? This will add all items to your pantry.')) return;
+    
     this.cartService.checkout().subscribe({
       next: () => {
-        alert('Checkout completed!');
+        alert('Checkout completed! Items have been added to your pantry.');
         this.loadCartItems();
+        // You might want to refresh the pantry list here if it's displayed elsewhere
       },
-      error: (err: Error) => console.error('Checkout error:', err)
+      error: (err) => {
+        console.error('Checkout error:', err);
+        alert('Failed to complete checkout');
+      }
     });
   }
 

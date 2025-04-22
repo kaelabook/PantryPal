@@ -67,6 +67,8 @@
   <div class="popup-content">
     <h2>Cooking {{ cookData.recipe.name }}!</h2>
     
+    <p class="cook-message">{{ cookData.message }}</p>
+    
     <div *ngIf="cookData.pantryItems.length > 0">
       <h3>Items to be used from pantry:</h3>
       <ul>

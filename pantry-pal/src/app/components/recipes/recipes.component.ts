@@ -29,7 +29,8 @@ export class RecipesComponent implements OnInit {
   cookData = {
     recipe: {} as Recipe,
     pantryItems: [] as {name: string, quantity: number, unit: string}[],
-    missingItems: [] as {name: string, quantity: number, unit: string}[]
+    missingItems: [] as {name: string, quantity: number, unit: string}[],
+    message: '' as string
   };
 
   currentRecipe: Recipe = {
@@ -140,9 +141,12 @@ export class RecipesComponent implements OnInit {
       this.cookData = {
         recipe: {...recipe},
         pantryItems: [],
-        missingItems: []
+        missingItems: [],
+        message: ''
       };
-
+  
+      let allAvailable = true;
+  
       recipe.ingredients.forEach(ingredient => {
         const pantryItem = pantryItems.find(item => 
           item.name.toLowerCase() === ingredient.name.toLowerCase()
@@ -155,6 +159,7 @@ export class RecipesComponent implements OnInit {
             unit: ingredient.unit
           });
         } else {
+          allAvailable = false;
           const neededQty = pantryItem ? 
             Math.max(ingredient.quantity - pantryItem.quantity, 0) : 
             ingredient.quantity;
@@ -168,7 +173,13 @@ export class RecipesComponent implements OnInit {
           }
         }
       });
-
+  
+      if (allAvailable) {
+        this.cookData.message = "All ingredients are available in your pantry. Cooking will use these items.";
+      } else {
+        this.cookData.message = "Some ingredients are missing. These will be added to your shopping cart.";
+      }
+  
       this.showCookConfirmation = true;
     } catch (err) {
       console.error('Error preparing cook:', err);

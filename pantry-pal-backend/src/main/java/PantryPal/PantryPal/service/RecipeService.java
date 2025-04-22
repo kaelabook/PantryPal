@@ -84,25 +84,32 @@ public class RecipeService {
     }
 
     @Transactional
-    public void cookRecipe(Long recipeId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
-        
-        List<PantryItem> pantryItems = pantryItemRepository.findAll();
+public void cookRecipe(Long recipeId) {
+    Recipe recipe = recipeRepository.findById(recipeId)
+            .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
+    
+    List<PantryItem> pantryItems = pantryItemRepository.findAll();
+    List<RecipeIngredient> missingIngredients = new ArrayList<>();
 
-        for (RecipeIngredient ingredient : recipe.getIngredients()) {
-            processIngredientForCooking(ingredient, pantryItems);
-        }
-    }
-
-    private void processIngredientForCooking(RecipeIngredient ingredient, 
-                                           List<PantryItem> pantryItems) {
+    // First pass to check if all ingredients are available
+    for (RecipeIngredient ingredient : recipe.getIngredients()) {
         Optional<PantryItem> pantryItemOpt = pantryItems.stream()
                 .filter(item -> item.getName().equalsIgnoreCase(ingredient.getName()))
                 .findFirst();
 
-        if (pantryItemOpt.isPresent()) {
-            PantryItem pantryItem = pantryItemOpt.get();
+        if (!pantryItemOpt.isPresent() || 
+            pantryItemOpt.get().getQuantity() < ingredient.getQuantity()) {
+            missingIngredients.add(ingredient);
+        }
+    }
+
+    // If no missing ingredients, proceed with cooking (remove from pantry)
+    if (missingIngredients.isEmpty()) {
+        for (RecipeIngredient ingredient : recipe.getIngredients()) {
+            PantryItem pantryItem = pantryItems.stream()
+                    .filter(item -> item.getName().equalsIgnoreCase(ingredient.getName()))
+                    .findFirst().get();
+            
             double newQuantity = pantryItem.getQuantity() - ingredient.getQuantity();
             
             if (newQuantity > 0) {
@@ -110,19 +117,17 @@ public class RecipeService {
                 pantryItemRepository.save(pantryItem);
             } else {
                 pantryItemRepository.delete(pantryItem);
-                
-                if (newQuantity < 0) {
-                    addToShoppingCart(ingredient.getName(), 
-                                    -newQuantity, 
-                                    ingredient.getUnit());
-                }
             }
-        } else {
+        }
+    } else {
+        // Add missing ingredients to shopping cart
+        for (RecipeIngredient ingredient : missingIngredients) {
             addToShoppingCart(ingredient.getName(), 
                            ingredient.getQuantity(), 
                            ingredient.getUnit());
         }
     }
+}
 
     private void addToShoppingCart(String name, Double quantity, String unit) {
         ShoppingCart cartItem = new ShoppingCart();

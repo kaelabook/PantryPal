@@ -47,4 +47,10 @@ public class ShoppingCartController {
         shoppingCartService.clearCart();
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<Void> checkout() {
+    shoppingCartService.checkout();
+    return ResponseEntity.ok().build();
+}
 }

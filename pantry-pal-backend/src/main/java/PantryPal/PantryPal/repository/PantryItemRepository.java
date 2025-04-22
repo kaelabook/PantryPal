@@ -9,4 +9,5 @@ public interface PantryItemRepository extends JpaRepository<PantryItem, Long> {
     List<PantryItem> findByUserId(Long userId);
 
     Optional<PantryItem> findByUserIdAndName(Long userId, String name);
+    Optional<PantryItem> findByNameAndUnitIgnoreCase(String name, String unit);
 }
