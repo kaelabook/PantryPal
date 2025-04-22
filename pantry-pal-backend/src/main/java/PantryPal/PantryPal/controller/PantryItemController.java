@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pantry-items")
-@CrossOrigin(origins = "http://localhost:4200")
 public class PantryItemController {
     private final PantryItemService pantryItemService;
 
