@@ -64,7 +64,7 @@ export class ShoppingCartComponent implements OnInit {
       next: (items: ShoppingCartItem[]) => {
         this.cartItems = items.map(item => ({
           ...item,
-          category: item.category.toUpperCase() // Normalize to uppercase
+          category: item.category.toUpperCase()
         }));
         this.filteredCartItems = [...this.cartItems];
       },
@@ -72,7 +72,6 @@ export class ShoppingCartComponent implements OnInit {
     });
   }
 
-  // Add these missing filter methods:
   applyFilter(): void {
     this.filteredIngredients = this.allIngredients.filter(item => {
       const nameMatch = this.searchQuery === '' || 
@@ -104,7 +103,6 @@ export class ShoppingCartComponent implements OnInit {
     return found?.display || categoryValue;
   }
 
-  // These methods can be used as aliases for template binding
   applySearchFilter(): void {
     this.applyFilter();
   }
@@ -113,7 +111,6 @@ export class ShoppingCartComponent implements OnInit {
     this.applyCartFilter();
   }
 
-  // Rest of your existing methods...
   addToCart(ingredient: PantryItem): void {
     const cartItem: ShoppingCartItem = {
       id: -1,
@@ -188,7 +185,7 @@ export class ShoppingCartComponent implements OnInit {
         next: () => {
             alert('Checkout completed! Items have been added to your pantry.');
             this.loadCartItems();
-            this.loadIngredients(); // Refresh pantry list
+            this.loadIngredients();
         },
         error: (err) => {
             console.error('Checkout error:', err);

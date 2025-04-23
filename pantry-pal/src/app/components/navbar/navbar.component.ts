@@ -11,12 +11,11 @@ import { RouterModule } from '@angular/router';
 })
 
 export class NavbarComponent {
-  isLoggedIn = false;  // Simulate if the user is logged in
-  username = 'JohnDoe'; // Hardcoded username, replace with actual user data later
+  isLoggedIn = false;
+  username = 'JohnDoe';
 
-  // Simulate login or logout for testing purposes
   toggleLoginStatus() {
     this.isLoggedIn = !this.isLoggedIn;
-    this.username = this.isLoggedIn ? 'JohnDoe' : '';  // Reset username if logged out
+    this.username = this.isLoggedIn ? 'JohnDoe' : '';
   }
 }

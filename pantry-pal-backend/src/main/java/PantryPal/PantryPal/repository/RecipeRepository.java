@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    // Basic CRUD operations are inherited
     @SuppressWarnings("null")
     List<Recipe> findAll();
     @Query("SELECT DISTINCT r FROM Recipe r LEFT JOIN FETCH r.ingredients")

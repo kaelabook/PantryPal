@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
 @Service
 public class PantryItemService {
     private final PantryItemRepository pantryItemRepository;
@@ -42,12 +41,10 @@ public class PantryItemService {
 
     @Transactional
     public PantryItemDTO createOrUpdateItem(PantryItemDTO pantryItemDTO) {
-        // Normalize empty/null units
         String unit = (pantryItemDTO.getUnit() == null || pantryItemDTO.getUnit().trim().isEmpty()) 
             ? "" 
             : pantryItemDTO.getUnit().trim();
 
-        // Check for existing item with same name, category and unit (case insensitive)
         Optional<PantryItem> existingItem = pantryItemRepository.findByNameAndCategoryAndUnitIgnoreCase(
             pantryItemDTO.getName().trim(),
             pantryItemDTO.getCategory(),
@@ -55,11 +52,9 @@ public class PantryItemService {
 
         PantryItem item;
         if (existingItem.isPresent()) {
-            // Update existing item - combine quantities
             item = existingItem.get();
             item.setQuantity(item.getQuantity() + pantryItemDTO.getQuantity());
         } else {
-            // Create new item
             item = new PantryItem();
             item.setName(pantryItemDTO.getName().trim());
             item.setCategory(pantryItemDTO.getCategory());
@@ -68,7 +63,6 @@ public class PantryItemService {
             item.setUserId(pantryItemDTO.getUserId());
         }
 
-        // Validate before saving
         ValidationService.ValidationResult validation = validationService.validatePantryItem(
             item, 
             pantryItemRepository.findAll()
@@ -89,7 +83,6 @@ public class PantryItemService {
         PantryItem existingItem = pantryItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pantry item not found"));
 
-        // Normalize empty/null units
         String unit = (pantryItemDTO.getUnit() == null || pantryItemDTO.getUnit().trim().isEmpty()) 
             ? "" 
             : pantryItemDTO.getUnit().trim();
@@ -99,7 +92,6 @@ public class PantryItemService {
         existingItem.setQuantity(pantryItemDTO.getQuantity());
         existingItem.setUnit(unit);
 
-        // Validate before saving
         ValidationService.ValidationResult validation = validationService.validatePantryItem(
             existingItem, 
             pantryItemRepository.findAll()

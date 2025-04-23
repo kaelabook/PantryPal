@@ -5,8 +5,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px; /* Reduced padding to make the navbar thinner */
-    height: auto; /* Ensure the navbar height adjusts based on content */
+    padding: 10px 15px;
+    height: auto;
   }
   
   .navbar a {
@@ -15,15 +15,15 @@
     font-size: 16px;
     color: #F2F1F0;
     text-align: center;
-    padding: 10px 12px; /* Adjust padding for the links */
+    padding: 10px 12px;
     text-decoration: none;
   }
   
   .user-info {
     font-size: 16px;
     color: #F2F1F0;
-    padding: 10px 12px; /* Reduced padding for the user info section */
-    margin-right: 20px; /* Move the login display slightly away from the edge */
+    padding: 10px 12px;
+    margin-right: 20px;
   }
   
   .user-info span {

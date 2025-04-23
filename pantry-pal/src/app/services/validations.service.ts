@@ -25,7 +25,6 @@ export class ValidationService {
       errors.push('Quantity must be a number');
     }
 
-    // Check for duplicates (case insensitive)
     const isDuplicate = existingItems.some(
       existing => existing.name.toLowerCase() === item.name.toLowerCase() && existing.id !== item.id
     );

@@ -15,7 +15,6 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrls: ['./recipes.component.css']
 })
 export class RecipesComponent implements OnInit {
-  /* ───────── State ───────── */
   showRecipeForm = false;
   isEditing = false;
   selectedRecipe: Recipe | null = null;
@@ -45,7 +44,6 @@ export class RecipesComponent implements OnInit {
     instructions: ''
   };
 
-  // Category mapping for display
   categoryDisplayMap = {
     'FRUITS': 'Fruits',
     'VEGETABLES': 'Vegetables',
@@ -62,13 +60,11 @@ export class RecipesComponent implements OnInit {
     private pantryService: PantryService
   ) {}
 
-  /* ───────── Lifecycle ───────── */
   ngOnInit(): void {
     this.loadRecipes();
     this.loadPantryItems();
   }
 
-  /* ───────── Data loading ───────── */
   loadRecipes(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -96,7 +92,6 @@ export class RecipesComponent implements OnInit {
     });
   }
 
-  /* ───────── UI helpers ───────── */
   toggleRecipeForm(): void {
     this.showRecipeForm = !this.showRecipeForm;
     if (!this.showRecipeForm) this.resetForm();
@@ -121,7 +116,6 @@ export class RecipesComponent implements OnInit {
     return this.categoryDisplayMap[categoryValue as keyof typeof this.categoryDisplayMap] || categoryValue;
   }
 
-  /* ───────── CRUD operations ───────── */
   saveRecipe(): void {
     if (!this.validateRecipe()) return;
 
@@ -153,7 +147,6 @@ export class RecipesComponent implements OnInit {
     });
   }
 
-  /* ───────── Cook flow ───────── */
   async prepareCookRecipe(recipe: Recipe): Promise<void> {
     try {
       const pantryItems = await this.pantryService.getAllItems().toPromise();
@@ -202,13 +195,11 @@ export class RecipesComponent implements OnInit {
     });
   }
 
-  /* ───────── Share (demo only) ───────── */
   shareRecipe(recipe: Recipe): void {
     console.log('Share recipe', recipe);
     alert(`Pretend this link is now copied to your clipboard:\n/recipes/${recipe.id}`);
   }
 
-  /* ───────── Form ingredient helpers ───────── */
   addIngredient(): void {
     this.currentRecipe.ingredients.push({ 
       name: '', 
@@ -236,7 +227,6 @@ export class RecipesComponent implements OnInit {
     this.activeIngredientIndex = null;
   }
 
-  /* ───────── Validation / reset ───────── */
   private validateRecipe(): boolean {
     if (!this.currentRecipe.name.trim()) { this.errorMessage = 'Recipe name is required'; return false; }
     if (this.currentRecipe.ingredients.some(i => !i.name.trim())) {

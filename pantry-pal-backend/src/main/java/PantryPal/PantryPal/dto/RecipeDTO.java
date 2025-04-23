@@ -13,7 +13,6 @@ public class RecipeDTO {
     private String instructions;
     private List<RecipeIngredientDTO> ingredients;
 
-    // Getters and setters with @JsonProperty
     @JsonProperty("id")
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

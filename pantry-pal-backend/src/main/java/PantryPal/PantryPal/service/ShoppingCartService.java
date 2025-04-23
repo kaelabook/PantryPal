@@ -17,7 +17,6 @@ import PantryPal.PantryPal.model.Category;
 public class ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final PantryItemService pantryItemService;
-    @SuppressWarnings("unused")
     private final ValidationService validationService;
 
     public ShoppingCartService(ShoppingCartRepository shoppingCartRepository,
@@ -35,7 +34,6 @@ public class ShoppingCartService {
     }
 
     public ShoppingCartDTO addToCart(ShoppingCartDTO cartDTO) {
-        // Validate cart item
         ValidationService.ValidationResult validation = validateCartItem(cartDTO);
         if (!validation.isValid()) {
             throw new IllegalArgumentException(String.join(", ", validation.getErrors()));

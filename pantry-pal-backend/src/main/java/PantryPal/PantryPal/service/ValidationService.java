@@ -24,7 +24,6 @@ public class ValidationService {
             result.addError("Quantity must be greater than 0");
         }
         
-        // Check for duplicates
         boolean isDuplicate = existingItems.stream()
             .anyMatch(existing -> 
                 existing.getName().equalsIgnoreCase(item.getName()) &&
@@ -49,12 +48,8 @@ public class ValidationService {
             valid = false;
         }
         
-        public boolean isValid() {
-            return valid;
-        }
+        public boolean isValid() { return valid; }
         
-        public List<String> getErrors() {
-            return errors;
-        }
+        public List<String> getErrors() { return errors; }
     }
 }

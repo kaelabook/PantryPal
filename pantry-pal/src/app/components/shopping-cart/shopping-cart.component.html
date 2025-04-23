@@ -4,7 +4,6 @@
   <h2 class="center-heading">Your Shopping Cart</h2>
 
   <div class="shopping-cart-sections">
-    <!-- Left section: List of all ingredients -->
     <div class="ingredients-list">
       <h3>All Ingredients</h3>
 
@@ -12,7 +11,7 @@
         <div class="search-filter-container">
           <input type="text" [(ngModel)]="searchQuery" placeholder="Search Ingredients..." 
                  (input)="applySearchFilter()" class="search-bar" />
-          <!-- Added category filter dropdown -->
+
           <select [(ngModel)]="selectedCategory" (change)="applyFilter()" class="filter-dropdown">
             <option value="">All Categories</option>
             <option *ngFor="let category of categories" [value]="category.value">
@@ -48,7 +47,6 @@
       </div>
     </div>
 
-    <!-- Right section: Current shopping cart -->
     <div class="shopping-cart">
       <h3>Shopping Cart</h3>
 
@@ -56,7 +54,6 @@
         <div class="cart-filter-container">
           <input type="text" [(ngModel)]="cartSearchQuery" placeholder="Search Cart..." 
                  (input)="applyCartSearchFilter()" class="search-bar" />
-          <!-- Added category filter dropdown -->
           
           <select [(ngModel)]="selectedCartCategory" (change)="applyCartFilter()" class="filter-dropdown">
             <option value="">All Categories</option>
@@ -102,7 +99,6 @@
 
   <button class="floating-button" (click)="toggleItemForm()">+</button>
 
-  <!-- Add/Edit Item Form -->
   <div class="popup" *ngIf="showItemForm">
     <form (ngSubmit)="saveItem()">
       <h2>{{ isEditing ? 'Edit' : 'Add' }} Item</h2>

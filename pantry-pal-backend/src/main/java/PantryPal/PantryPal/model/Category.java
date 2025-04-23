@@ -15,25 +15,19 @@ public enum Category {
 
     private final String value;
 
-    Category(String value) {
-        this.value = value;
-    }
+    Category(String value) { this.value = value; }
 
-    public String getValue() {
-        return value;
-    }
+    public String getValue() { return value; }
 
     @JsonCreator
     public static Category fromValue(String value) {
     if (value == null) return null;
     
-    // Trim and convert to uppercase
     value = value.trim().toUpperCase();
     
     try {
         return Category.valueOf(value);
     } catch (IllegalArgumentException e) {
-        // Fallback to case-insensitive match
         for (Category category : values()) {
             if (category.name().equalsIgnoreCase(value)) {
                 return category;
@@ -45,6 +39,6 @@ public enum Category {
 
 @JsonValue
 public String toValue() {
-    return this.name().toLowerCase(); // Or keep uppercase if preferred
+    return this.name().toLowerCase();
 }
 }

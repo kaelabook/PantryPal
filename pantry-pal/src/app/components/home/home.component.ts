@@ -13,12 +13,10 @@ export class HomeComponent {
   showLoginForm = false;
   showSignupForm = false;
 
-  // Toggle the Login form visibility
   toggleLoginForm() {
     this.showLoginForm = !this.showLoginForm;
   }
 
-  // Toggle the Signup form visibility
   toggleSignupForm() {
     this.showSignupForm = !this.showSignupForm;
   }

@@ -5,13 +5,11 @@
 
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-  <!-- loading -->
   <div *ngIf="isLoading" class="loading-spinner">
     <div class="spinner"></div>
     <p>Loading recipes...</p>
   </div>
 
-  <!-- recipes -->
   <div class="recipes-grid" *ngIf="!isLoading">
     <div class="recipe-card" *ngFor="let recipe of savedRecipes">
       <h3>{{ recipe.name }}</h3>
@@ -39,11 +37,9 @@
     </div>
   </div>
 
-  <!-- floating "add" FAB -->
   <button class="floating-button" (click)="toggleRecipeForm()">+</button>
 </div>
 
-<!-- View Recipe Popup -->
 <div class="popup" *ngIf="selectedRecipe">
   <div class="view-recipe-dialog">
     <h2>{{ selectedRecipe.name }}</h2>
@@ -72,7 +68,6 @@
   </div>
 </div>
 
-<!-- Cook Confirmation Popup -->
 <div class="popup" *ngIf="showCookConfirmation">
   <div class="dialog">
     <h2>Preparing to Cook {{ cookData.recipe.name }}</h2>
@@ -117,7 +112,6 @@
   </div>
 </div>
 
-<!-- Add/Edit Recipe Form -->
 <div class="popup" *ngIf="showRecipeForm">
   <form (ngSubmit)="saveRecipe()" class="dialog form-container">
     <h2>{{ isEditing ? 'Edit' : 'Create' }} Recipe</h2>

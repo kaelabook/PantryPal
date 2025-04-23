@@ -17,10 +17,10 @@ public class RecipeService {
     private final ValidationService validationService;
 
     public RecipeService(RecipeRepository recipeRepository,
-                       RecipeIngredientRepository recipeIngredientRepository,
-                       PantryItemRepository pantryItemRepository,
-                       ShoppingCartRepository shoppingCartRepository,
-                       ValidationService validationService) {
+        RecipeIngredientRepository recipeIngredientRepository,
+        PantryItemRepository pantryItemRepository,
+        ShoppingCartRepository shoppingCartRepository,
+        ValidationService validationService) {
         this.recipeRepository = recipeRepository;
         this.pantryItemRepository = pantryItemRepository;
         this.shoppingCartRepository = shoppingCartRepository;
@@ -61,19 +61,17 @@ public RecipeDTO saveRecipe(RecipeDTO recipeDTO) {
     recipe.setServings(recipeDTO.getServings());
     recipe.setInstructions(recipeDTO.getInstructions());
 
-    // Clear existing ingredients if editing
     if (recipeDTO.getId() != null) {
         recipe.getIngredients().clear();
     }
 
-    // Add new ingredients
     for (RecipeIngredientDTO ingDTO : recipeDTO.getIngredients()) {
         RecipeIngredient ingredient = new RecipeIngredient();
         ingredient.setName(ingDTO.getName());
         ingredient.setQuantity(ingDTO.getQuantity());
         ingredient.setUnit(ingDTO.getUnit());
         ingredient.setRecipe(recipe);
-        recipe.getIngredients().add(ingredient); // Add to existing collection
+        recipe.getIngredients().add(ingredient);
     }
 
     Recipe savedRecipe = recipeRepository.save(recipe);
@@ -95,11 +93,9 @@ public void cookRecipe(Long recipeId) {
     
     List<RecipeIngredient> missingIngredients = new ArrayList<>();
 
-    // First pass to check for missing ingredients
     for (RecipeIngredient ingredient : recipe.getIngredients()) {
         String name = ingredient.getName().toLowerCase().trim();
         
-        // Find matching pantry items (case insensitive name match)
         List<PantryItem> pantryItems = pantryItemRepository.findAll().stream()
             .filter(item -> item.getName().toLowerCase().trim().equals(name))
             .toList();
@@ -118,7 +114,6 @@ public void cookRecipe(Long recipeId) {
     }
 
     if (missingIngredients.isEmpty()) {
-        // Deduct from pantry
         for (RecipeIngredient ingredient : recipe.getIngredients()) {
             String name = ingredient.getName().toLowerCase().trim();
             double neededQuantity = ingredient.getQuantity();
@@ -145,7 +140,6 @@ public void cookRecipe(Long recipeId) {
             }
         }
     } else {
-        // Add missing ingredients to shopping cart
         for (RecipeIngredient ingredient : missingIngredients) {
             Category category = determineCategory(ingredient.getName());
             addToShoppingCart(

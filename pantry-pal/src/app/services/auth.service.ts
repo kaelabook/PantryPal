@@ -4,14 +4,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserId: number | null = null; // Start as null
+  private currentUserId: number | null = null;
 
   setCurrentUser(userId: number | null): void {
     this.currentUserId = userId;
   }
 
   getCurrentUserId(): number | null {
-    return this.currentUserId; // Return null if not authenticated
+    return this.currentUserId;
   }
 
   isAuthenticated(): boolean {

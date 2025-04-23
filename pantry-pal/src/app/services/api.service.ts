@@ -7,6 +7,4 @@ export class ApiService {
   private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) { }
-
-  // Generic API methods can go here if needed
 }

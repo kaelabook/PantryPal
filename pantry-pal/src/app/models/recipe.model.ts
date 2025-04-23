@@ -3,7 +3,7 @@ export interface RecipeIngredient {
   name: string;
   quantity: number;
   unit: string;
-  category: string;  // Changed from optional to required
+  category: string;
   recipeId?: number;
 }
 
