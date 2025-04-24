@@ -1,6 +1,8 @@
 package PantryPal.PantryPal.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +22,7 @@ public class Recipe {
     private String instructions;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredient> ingredients;
+    private List<RecipeIngredient> ingredients = new ArrayList<>(); // Initialize here
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -42,7 +44,7 @@ public class Recipe {
 
     public String getInstructions() { return instructions; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
-    
+
     public List<RecipeIngredient> getIngredients() { return ingredients; }
     public void setIngredients(List<RecipeIngredient> ingredients) { this.ingredients = ingredients; }
 }

@@ -43,39 +43,43 @@ public class RecipeService {
     }
 
     @Transactional
-public RecipeDTO saveRecipe(RecipeDTO recipeDTO) {
-    ValidationService.ValidationResult validation = validateRecipe(recipeDTO);
-    if (!validation.isValid()) {
-        throw new IllegalArgumentException(String.join(", ", validation.getErrors()));
-    }
+    public RecipeDTO saveRecipe(RecipeDTO recipeDTO) {
+        ValidationService.ValidationResult validation = validateRecipe(recipeDTO);
+        if (!validation.isValid()) {
+            throw new IllegalArgumentException(String.join(", ", validation.getErrors()));
+        }
 
-    Recipe recipe = (recipeDTO.getId() != null) ?
+        Recipe recipe = (recipeDTO.getId() != null) ?
             recipeRepository.findById(recipeDTO.getId())
                     .orElse(new Recipe()) :
             new Recipe();
 
-    recipe.setName(recipeDTO.getName());
-    recipe.setDescription(recipeDTO.getDescription());
-    recipe.setCookTime(recipeDTO.getCookTime());
-    recipe.setTemperature(recipeDTO.getTemperature());
-    recipe.setServings(recipeDTO.getServings());
-    recipe.setInstructions(recipeDTO.getInstructions());
+        if (recipe.getIngredients() == null) {
+            recipe.setIngredients(new ArrayList<>());
+        }
 
-    if (recipeDTO.getId() != null) {
-        recipe.getIngredients().clear();
-    }
+        recipe.setName(recipeDTO.getName());
+        recipe.setDescription(recipeDTO.getDescription());
+        recipe.setCookTime(recipeDTO.getCookTime());
+        recipe.setTemperature(recipeDTO.getTemperature());
+        recipe.setServings(recipeDTO.getServings());
+        recipe.setInstructions(recipeDTO.getInstructions());
 
-    for (RecipeIngredientDTO ingDTO : recipeDTO.getIngredients()) {
-        RecipeIngredient ingredient = new RecipeIngredient();
-        ingredient.setName(ingDTO.getName());
-        ingredient.setQuantity(ingDTO.getQuantity());
-        ingredient.setUnit(ingDTO.getUnit());
-        ingredient.setRecipe(recipe);
-        recipe.getIngredients().add(ingredient);
-    }
+        if (recipeDTO.getId() != null) {
+            recipe.getIngredients().clear();
+        }
 
-    Recipe savedRecipe = recipeRepository.save(recipe);
-    return convertToDTO(savedRecipe);
+        for (RecipeIngredientDTO ingDTO : recipeDTO.getIngredients()) {
+            RecipeIngredient ingredient = new RecipeIngredient();
+            ingredient.setName(ingDTO.getName());
+            ingredient.setQuantity(ingDTO.getQuantity());
+            ingredient.setUnit(ingDTO.getUnit());
+            ingredient.setRecipe(recipe);
+            recipe.getIngredients().add(ingredient);
+        }
+
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return convertToDTO(savedRecipe);
 }
 
     @Transactional
