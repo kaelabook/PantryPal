@@ -1,45 +1,66 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
-import { Recipe, RecipeIngredient } from '../models/recipe.model';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Recipe } from '../models/recipe.model';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
-  private apiUrl = '/api/recipes';
+  private apiUrl = 'http://localhost:8080/api/recipes';
 
   constructor(private http: HttpClient) { }
 
-  getAllRecipes(userId: number): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(`${this.apiUrl}/user/${userId}`).pipe(
+  getAllRecipes(): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(this.apiUrl).pipe(
+      tap(response => console.log('Fetched recipes:', response)),
+      map(response => Array.isArray(response) ? response : []),
       catchError(this.handleError)
     );
   }
+
   getRecipe(id: number): Observable<Recipe> {
     return this.http.get<Recipe>(`${this.apiUrl}/${id}`).pipe(
+      tap(r => console.log('Fetched recipe:', r)),
       catchError(this.handleError)
     );
   }
 
   createRecipe(recipe: Recipe): Observable<Recipe> {
     return this.http.post<Recipe>(this.apiUrl, recipe).pipe(
+      tap(newRecipe => console.log('Created recipe:', newRecipe)),
       catchError(this.handleError)
     );
   }
 
   updateRecipe(id: number, recipe: Recipe): Observable<Recipe> {
     return this.http.put<Recipe>(`${this.apiUrl}/${id}`, recipe).pipe(
+      tap(updatedRecipe => console.log('Updated recipe:', updatedRecipe)),
       catchError(this.handleError)
     );
   }
 
   deleteRecipe(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => console.log('Deleted recipe ID:', id)),
       catchError(this.handleError)
     );
   }
 
+  cookRecipe(recipeId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${recipeId}/cook`, {}).pipe(
+      tap(() => console.log('Cooked recipe ID:', recipeId)),
+      catchError(error => {
+        console.error('Error cooking recipe:', error);
+        return throwError(() => new Error(
+          error.error?.message || 'Failed to cook recipe. Please try again.'
+        ));
+      })
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
-    console.error('Recipe Service Error:', error);
-    return throwError(() => new Error('Error processing recipe operation'));
+    console.error('RecipeService error:', error);
+    return throwError(() => new Error(
+      error.error?.message || 'Failed to process recipe operation'
+    ));
   }
 }

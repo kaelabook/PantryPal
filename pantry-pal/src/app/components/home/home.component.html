@@ -1,21 +1,18 @@
 <app-navbar></app-navbar>
 
 <section class="home-container">
-  <!-- Info box containing the description and buttons -->
   <div class="info-box">
     <h1 class="title">Welcome to PantryPal</h1>
     <p>Your ultimate kitchen assistant for managing pantry inventory, recipes, and shopping lists.</p>
     <p>Keep track of your ingredients, create recipes, and automatically generate shopping carts for missing ingredients. All at your fingertips.</p>
     <p>Start managing your pantry today and never run out of ingredients again!</p>
 
-    <!-- Buttons for Login and Signup -->
     <div class="auth-buttons">
       <button class="auth-btn" (click)="toggleLoginForm()">Login</button>
       <button class="auth-btn" (click)="toggleSignupForm()">Signup</button>
     </div>
   </div>
 
-  <!-- Login Form Popup -->
   <div class="popup" *ngIf="showLoginForm">
     <form>
       <h2>Login</h2>
@@ -30,7 +27,6 @@
     </form>
   </div>
 
-  <!-- Signup Form Popup -->
   <div class="popup" *ngIf="showSignupForm">
     <form>
       <h2>Signup</h2>

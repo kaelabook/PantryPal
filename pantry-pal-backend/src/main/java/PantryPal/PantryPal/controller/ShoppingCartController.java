@@ -1,14 +1,15 @@
 package PantryPal.PantryPal.controller;
 
 import PantryPal.PantryPal.dto.ShoppingCartDTO;
+import PantryPal.PantryPal.model.Category;
 import PantryPal.PantryPal.service.ShoppingCartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/shopping-cart")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
@@ -16,22 +17,23 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ShoppingCartDTO>> getShoppingCartForUser(@PathVariable Long userId) {
-        List<ShoppingCartDTO> cartItems = shoppingCartService.getShoppingCartForUser(userId);
-        return ResponseEntity.ok(cartItems);
+    @GetMapping
+    public ResponseEntity<List<ShoppingCartDTO>> getAllItems() {
+        List<ShoppingCartDTO> items = shoppingCartService.getAllItems();
+        return ResponseEntity.ok(items);
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<ShoppingCartDTO>> getCartItemsByCategory(@PathVariable Category category) {
+        List<ShoppingCartDTO> items = shoppingCartService.getItemsByCategory(category);
+        return ResponseEntity.ok(items);
+}
 
     @PostMapping
     public ResponseEntity<ShoppingCartDTO> addToCart(@RequestBody ShoppingCartDTO cartDTO) {
-    try {
         ShoppingCartDTO addedItem = shoppingCartService.addToCart(cartDTO);
         return ResponseEntity.ok(addedItem);
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().build();
     }
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<ShoppingCartDTO> updateCartItem(
@@ -47,9 +49,9 @@ public class ShoppingCartController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/clear/user/{userId}")
-    public ResponseEntity<Void> clearCart(@PathVariable Long userId) {
-        shoppingCartService.clearCart(userId);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/checkout")
+    public ResponseEntity<Void> checkout() {
+        shoppingCartService.checkout();
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,39 +1,82 @@
 package PantryPal.PantryPal.service;
 
+import PantryPal.PantryPal.dto.PantryItemDTO;
 import PantryPal.PantryPal.dto.ShoppingCartDTO;
-import PantryPal.PantryPal.model.Category;
 import PantryPal.PantryPal.model.ShoppingCart;
 import PantryPal.PantryPal.repository.ShoppingCartRepository;
+import PantryPal.PantryPal.repository.PantryItemRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import PantryPal.PantryPal.model.Category;
 
+@SuppressWarnings("unused")
 @Service
 public class ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
+    private final PantryItemService pantryItemService;
+    private final ValidationService validationService;
 
-    public ShoppingCartService(ShoppingCartRepository shoppingCartRepository) {
+    public ShoppingCartService(ShoppingCartRepository shoppingCartRepository,
+                             PantryItemService pantryItemService,
+                             ValidationService validationService) {
         this.shoppingCartRepository = shoppingCartRepository;
+        this.pantryItemService = pantryItemService;
+        this.validationService = validationService;
     }
 
-    public List<ShoppingCartDTO> getShoppingCartForUser(Long userId) {
-        List<ShoppingCart> cartItems = shoppingCartRepository.findByUserId(userId);
-        return cartItems.stream()
+    public List<ShoppingCartDTO> getAllItems() {
+        return shoppingCartRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     public ShoppingCartDTO addToCart(ShoppingCartDTO cartDTO) {
-        ShoppingCart cartItem = new ShoppingCart();
-        cartItem.setUserId(cartDTO.getUserId());
-        cartItem.setName(cartDTO.getName());
-        cartItem.setQuantity(cartDTO.getQuantity());
-        cartItem.setUnit(cartDTO.getUnit());
-        cartItem.setCategory(Category.valueOf(cartDTO.getCategory().name()));
+        ValidationService.ValidationResult validation = validateCartItem(cartDTO);
+        if (!validation.isValid()) {
+            throw new IllegalArgumentException(String.join(", ", validation.getErrors()));
+        }
+
+        String unit = cartDTO.getUnit() != null ? cartDTO.getUnit() : "";
+        Optional<ShoppingCart> existingItem = shoppingCartRepository
+            .findByNameAndCategoryAndUnitIgnoreCase(
+                cartDTO.getName(),
+                cartDTO.getCategory(),
+                unit);
+
+        ShoppingCart cartItem;
+        if (existingItem.isPresent()) {
+            cartItem = existingItem.get();
+            cartItem.setQuantity(cartItem.getQuantity() + cartDTO.getQuantity());
+        } else {
+            cartItem = new ShoppingCart();
+            cartItem.setName(cartDTO.getName());
+            cartItem.setQuantity(cartDTO.getQuantity());
+            cartItem.setUnit(cartDTO.getUnit());
+            cartItem.setCategory(cartDTO.getCategory());
+        }
 
         ShoppingCart savedItem = shoppingCartRepository.save(cartItem);
         return convertToDTO(savedItem);
+    }
+
+    @Transactional
+    public void checkout() {
+        List<ShoppingCart> cartItems = shoppingCartRepository.findAll();
+        
+        for (ShoppingCart cartItem : cartItems) {
+            PantryItemDTO dto = new PantryItemDTO();
+            dto.setName(cartItem.getName());
+            dto.setCategory(cartItem.getCategory());
+            dto.setQuantity(cartItem.getQuantity());
+            dto.setUnit(cartItem.getUnit());
+            
+            pantryItemService.createOrUpdateItem(dto);
+        }
+        
+        shoppingCartRepository.deleteAll();
     }
 
     public ShoppingCartDTO updateCartItem(Long id, ShoppingCartDTO cartDTO) {
@@ -53,18 +96,37 @@ public class ShoppingCartService {
         shoppingCartRepository.deleteById(id);
     }
 
-    public void clearCart(Long userId) {
-        shoppingCartRepository.deleteByUserId(userId);
-    }
-
     private ShoppingCartDTO convertToDTO(ShoppingCart cartItem) {
         ShoppingCartDTO dto = new ShoppingCartDTO();
         dto.setId(cartItem.getId());
-        dto.setUserId(cartItem.getUserId());
         dto.setName(cartItem.getName());
         dto.setQuantity(cartItem.getQuantity());
         dto.setUnit(cartItem.getUnit());
         dto.setCategory(cartItem.getCategory());
         return dto;
+    }
+
+    private ValidationService.ValidationResult validateCartItem(ShoppingCartDTO cartDTO) {
+        ValidationService.ValidationResult result = new ValidationService.ValidationResult();
+        
+        if (cartDTO.getName() == null || cartDTO.getName().trim().isEmpty()) {
+            result.addError("Item name is required");
+        }
+        
+        if (cartDTO.getCategory() == null) {
+            result.addError("Category is required");
+        }
+        
+        if (cartDTO.getQuantity() <= 0) {
+            result.addError("Quantity must be positive");
+        }
+        
+        return result;
+    }
+
+    public List<ShoppingCartDTO> getItemsByCategory(Category category) {
+        return shoppingCartRepository.findByCategory(category).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

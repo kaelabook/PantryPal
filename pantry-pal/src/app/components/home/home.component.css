@@ -1,10 +1,9 @@
 .home-container {
   text-align: center;
-  margin-top: 50px; /* Move the content slightly higher */
+  margin-top: 50px;
   padding: 20px;
 }
 
-/* Info Box with red outline around the description and buttons */
 .info-box {
   background-color: #F2F1F0;
   padding: 30px;
@@ -14,13 +13,13 @@
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid red; /* Thinner red outline around the info box */
+  border: 1px solid red;
 }
 
 .title {
-  font-size: 36px; /* Make the title larger */
+  font-size: 36px;
   color: #046A38;
-  margin-bottom: 20px; /* Add some space between title and text */
+  margin-bottom: 20px;
 }
 
 .info-box p {
@@ -28,7 +27,6 @@
   font-size: 18px;
 }
 
-/* Buttons for Login and Signup */
 .auth-buttons {
   display: flex;
   justify-content: center;
@@ -50,7 +48,6 @@
   background-color: #719949;
 }
 
-/* Popup styling */
 .popup {
   position: fixed;
   top: 50%;
@@ -66,7 +63,6 @@
   max-width: 400px;
 }
 
-/* Form Styling */
 form {
   display: flex;
   flex-direction: column;

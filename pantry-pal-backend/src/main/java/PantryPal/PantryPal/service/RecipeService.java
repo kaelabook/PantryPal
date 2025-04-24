@@ -5,144 +5,218 @@ import PantryPal.PantryPal.model.*;
 import PantryPal.PantryPal.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
     private final PantryItemRepository pantryItemRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    @SuppressWarnings("unused")
+    private final ValidationService validationService;
 
     public RecipeService(RecipeRepository recipeRepository,
-            RecipeIngredientRepository recipeIngredientRepository,
-            PantryItemRepository pantryItemRepository,
-            ShoppingCartRepository shoppingCartRepository) {
+        RecipeIngredientRepository recipeIngredientRepository,
+        PantryItemRepository pantryItemRepository,
+        ShoppingCartRepository shoppingCartRepository,
+        ValidationService validationService) {
         this.recipeRepository = recipeRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
         this.pantryItemRepository = pantryItemRepository;
         this.shoppingCartRepository = shoppingCartRepository;
+        this.validationService = validationService;
     }
 
+    @Transactional(readOnly = true)
     public List<RecipeDTO> getAllRecipes() {
-        return recipeRepository.findAll().stream()
+        List<Recipe> recipes = recipeRepository.findAllWithIngredients();
+        return recipes.stream()
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-    
-    public List<RecipeDTO> getAllRecipesForUser(Long userId) {
-        return recipeRepository.findByUserId(userId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public RecipeDTO getRecipeById(Long id) {
+    @Transactional(readOnly = true)
+    public RecipeDTO getRecipe(Long id) {
         return recipeRepository.findById(id)
                 .map(this::convertToDTO)
-                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + id));
     }
 
     @Transactional
-    public RecipeDTO createRecipe(RecipeDTO recipeDTO) {
-        Recipe recipe = new Recipe();
+    public RecipeDTO saveRecipe(RecipeDTO recipeDTO) {
+        ValidationService.ValidationResult validation = validateRecipe(recipeDTO);
+        if (!validation.isValid()) {
+            throw new IllegalArgumentException(String.join(", ", validation.getErrors()));
+        }
+
+        Recipe recipe = (recipeDTO.getId() != null) ?
+            recipeRepository.findById(recipeDTO.getId())
+                    .orElse(new Recipe()) :
+            new Recipe();
+
+        if (recipe.getIngredients() == null) {
+            recipe.setIngredients(new ArrayList<>());
+        }
+
         recipe.setName(recipeDTO.getName());
         recipe.setDescription(recipeDTO.getDescription());
         recipe.setCookTime(recipeDTO.getCookTime());
         recipe.setTemperature(recipeDTO.getTemperature());
         recipe.setServings(recipeDTO.getServings());
         recipe.setInstructions(recipeDTO.getInstructions());
-        recipe.setUserId(recipeDTO.getUserId());
+
+        if (recipeDTO.getId() != null) {
+            recipe.getIngredients().clear();
+        }
+
+        for (RecipeIngredientDTO ingDTO : recipeDTO.getIngredients()) {
+            RecipeIngredient ingredient = new RecipeIngredient();
+            ingredient.setName(ingDTO.getName());
+            ingredient.setQuantity(ingDTO.getQuantity());
+            ingredient.setUnit(ingDTO.getUnit());
+            ingredient.setRecipe(recipe);
+            recipe.getIngredients().add(ingredient);
+        }
 
         Recipe savedRecipe = recipeRepository.save(recipe);
-
-        List<RecipeIngredient> ingredients = recipeDTO.getIngredients().stream()
-                .map(ingDTO -> {
-                    RecipeIngredient ingredient = new RecipeIngredient();
-                    ingredient.setName(ingDTO.getName());
-                    ingredient.setQuantity(ingDTO.getQuantity());
-                    ingredient.setUnit(ingDTO.getUnit());
-                    ingredient.setRecipe(savedRecipe);
-                    return recipeIngredientRepository.save(ingredient);
-                }).collect(Collectors.toList());
-
-        savedRecipe.setIngredients(ingredients);
-
-        checkPantryAndUpdateCart(savedRecipe, recipeDTO.getUserId());
-
         return convertToDTO(savedRecipe);
-    }
+}
 
     @Transactional
-    public RecipeDTO updateRecipe(Long id, RecipeDTO recipeDTO) {
-        Recipe existingRecipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Recipe not found"));
-
-        existingRecipe.setName(recipeDTO.getName());
-        existingRecipe.setDescription(recipeDTO.getDescription());
-        existingRecipe.setCookTime(recipeDTO.getCookTime());
-        existingRecipe.setTemperature(recipeDTO.getTemperature());
-        existingRecipe.setServings(recipeDTO.getServings());
-        existingRecipe.setInstructions(recipeDTO.getInstructions());
-
-        recipeIngredientRepository.deleteByRecipeId(id);
-
-        List<RecipeIngredient> ingredients = recipeDTO.getIngredients().stream()
-                .map(ingDTO -> {
-                    RecipeIngredient ingredient = new RecipeIngredient();
-                    ingredient.setName(ingDTO.getName());
-                    ingredient.setQuantity(ingDTO.getQuantity());
-                    ingredient.setUnit(ingDTO.getUnit());
-                    ingredient.setRecipe(existingRecipe);
-                    return recipeIngredientRepository.save(ingredient);
-                }).collect(Collectors.toList());
-
-        existingRecipe.setIngredients(ingredients);
-
-        Recipe updatedRecipe = recipeRepository.save(existingRecipe);
-
-        checkPantryAndUpdateCart(updatedRecipe, recipeDTO.getUserId());
-
-        return convertToDTO(updatedRecipe);
-    }
-
     public void deleteRecipe(Long id) {
+        if (!recipeRepository.existsById(id)) {
+            throw new RuntimeException("Recipe not found with id: " + id);
+        }
         recipeRepository.deleteById(id);
     }
 
-    private void checkPantryAndUpdateCart(Recipe recipe, Long userId) {
-        for (RecipeIngredient ingredient : recipe.getIngredients()) {
-            Optional<PantryItem> pantryItemOpt = pantryItemRepository
-                    .findByUserIdAndName(userId, ingredient.getName());
+    @Transactional
+public void cookRecipe(Long recipeId) {
+    Recipe recipe = recipeRepository.findById(recipeId)
+            .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
+    
+    List<RecipeIngredient> missingIngredients = new ArrayList<>();
 
-            double neededQuantity = ingredient.getQuantity();
-            double availableQuantity = pantryItemOpt.map(PantryItem::getQuantity).orElse(0.0);
+    for (RecipeIngredient ingredient : recipe.getIngredients()) {
+        String name = ingredient.getName().toLowerCase().trim();
+        
+        List<PantryItem> pantryItems = pantryItemRepository.findAll().stream()
+            .filter(item -> item.getName().toLowerCase().trim().equals(name))
+            .toList();
 
-            if (availableQuantity < neededQuantity) {
-                Optional<ShoppingCart> existingCartItem = shoppingCartRepository
-                        .findByUserIdAndName(userId, ingredient.getName());
-
-                if (existingCartItem.isPresent()) {
-                    ShoppingCart cartItem = existingCartItem.get();
-                    double newQuantity = Math.max(neededQuantity - availableQuantity, cartItem.getQuantity());
-                    cartItem.setQuantity(newQuantity);
-                    shoppingCartRepository.save(cartItem);
-                } else {
-                    ShoppingCart cartItem = new ShoppingCart();
-                    cartItem.setUserId(userId);
-                    cartItem.setName(ingredient.getName());
-                    cartItem.setQuantity(neededQuantity - availableQuantity);
-                    cartItem.setUnit(ingredient.getUnit());
-                    cartItem.setCategory(determineCategory(ingredient.getName()));
-                    shoppingCartRepository.save(cartItem);
-                }
+        boolean found = false;
+        for (PantryItem pantryItem : pantryItems) {
+            if (pantryItem.getQuantity() >= ingredient.getQuantity()) {
+                found = true;
+                break;
             }
+        }
+
+        if (!found) {
+            missingIngredients.add(ingredient);
+        }
+    }
+
+    if (missingIngredients.isEmpty()) {
+        for (RecipeIngredient ingredient : recipe.getIngredients()) {
+            String name = ingredient.getName().toLowerCase().trim();
+            double neededQuantity = ingredient.getQuantity();
+            
+            List<PantryItem> pantryItems = pantryItemRepository.findAll().stream()
+                .filter(item -> item.getName().toLowerCase().trim().equals(name))
+                .sorted(Comparator.comparing(PantryItem::getQuantity).reversed())
+                .toList();
+
+            for (PantryItem pantryItem : pantryItems) {
+                if (neededQuantity <= 0) break;
+                
+                double available = pantryItem.getQuantity();
+                double deduct = Math.min(available, neededQuantity);
+                
+                if (deduct == available) {
+                    pantryItemRepository.delete(pantryItem);
+                } else {
+                    pantryItem.setQuantity(available - deduct);
+                    pantryItemRepository.save(pantryItem);
+                }
+                
+                neededQuantity -= deduct;
+            }
+        }
+    } else {
+        for (RecipeIngredient ingredient : missingIngredients) {
+            Category category = determineCategory(ingredient.getName());
+            addToShoppingCart(
+                ingredient.getName(),
+                ingredient.getQuantity(),
+                ingredient.getUnit() != null ? ingredient.getUnit() : "",
+                category
+            );
+        }
+    }
+}
+
+    private void addToShoppingCart(String name, Double quantity, String unit, Category category) {
+        Optional<ShoppingCart> existingItem = shoppingCartRepository
+            .findByNameAndCategoryAndUnitIgnoreCase(name, category, unit);
+        
+        if (existingItem.isPresent()) {
+            ShoppingCart item = existingItem.get();
+            item.setQuantity(item.getQuantity() + quantity);
+            shoppingCartRepository.save(item);
+        } else {
+            ShoppingCart newItem = new ShoppingCart();
+            newItem.setName(name);
+            newItem.setQuantity(quantity);
+            newItem.setUnit(unit);
+            newItem.setCategory(category);
+            shoppingCartRepository.save(newItem);
         }
     }
 
     private Category determineCategory(String name) {
-        throw new UnsupportedOperationException("Unimplemented method 'determineCategory'");
+        String lowerName = name.toLowerCase();
+        if (lowerName.matches(".*(apple|banana|berry|orange|pear|fruit).*")) {
+            return Category.FRUITS;
+        } else if (lowerName.matches(".*(vegetable|carrot|lettuce|broccoli|spinach|pepper|cucumber).*")) {
+            return Category.VEGETABLES;
+        } else if (lowerName.matches(".*(milk|cheese|yogurt|cream|butter).*")) {
+            return Category.DAIRY;
+        } else if (lowerName.matches(".*(beef|chicken|fish|pork|egg|meat|steak).*")) {
+            return Category.PROTEIN;
+        } else if (lowerName.matches(".*(rice|pasta|bread|flour|oat|grain|cereal).*")) {
+            return Category.GRAINS;
+        } else if (lowerName.matches(".*(salt|pepper|spice|herb|seasoning).*")) {
+            return Category.SEASONINGS;
+        }
+        return Category.MISC;
+    }
+
+    private ValidationService.ValidationResult validateRecipe(RecipeDTO recipeDTO) {
+        ValidationService.ValidationResult result = new ValidationService.ValidationResult();
+        
+        if (recipeDTO.getName() == null || recipeDTO.getName().trim().isEmpty()) {
+            result.addError("Recipe name is required");
+        }
+        
+        if (recipeDTO.getIngredients() == null || recipeDTO.getIngredients().isEmpty()) {
+            result.addError("At least one ingredient is required");
+        } else {
+            for (RecipeIngredientDTO ingredient : recipeDTO.getIngredients()) {
+                if (ingredient.getName() == null || ingredient.getName().trim().isEmpty()) {
+                    result.addError("Ingredient name is required");
+                }
+                if (ingredient.getQuantity() <= 0) {
+                    result.addError("Ingredient quantity must be positive");
+                }
+            }
+        }
+        
+        if (recipeDTO.getInstructions() == null || recipeDTO.getInstructions().trim().isEmpty()) {
+            result.addError("Instructions are required");
+        }
+        
+        return result;
     }
 
     private RecipeDTO convertToDTO(Recipe recipe) {
@@ -154,18 +228,20 @@ public class RecipeService {
         dto.setTemperature(recipe.getTemperature());
         dto.setServings(recipe.getServings());
         dto.setInstructions(recipe.getInstructions());
-        dto.setUserId(recipe.getUserId());
 
-        List<RecipeIngredientDTO> ingredientDTOs = recipe.getIngredients().stream()
-                .map(ing -> {
-                    RecipeIngredientDTO ingDTO = new RecipeIngredientDTO();
-                    ingDTO.setName(ing.getName());
-                    ingDTO.setQuantity(ing.getQuantity());
-                    ingDTO.setUnit(ing.getUnit());
-                    return ingDTO;
-                }).collect(Collectors.toList());
+        dto.setIngredients(recipe.getIngredients().stream()
+            .map(this::convertIngredientToDTO)
+            .collect(Collectors.toList()));
 
-        dto.setIngredients(ingredientDTOs);
+        return dto;
+    }
+
+    private RecipeIngredientDTO convertIngredientToDTO(RecipeIngredient ingredient) {
+        RecipeIngredientDTO dto = new RecipeIngredientDTO();
+        dto.setId(ingredient.getId());
+        dto.setName(ingredient.getName());
+        dto.setQuantity(ingredient.getQuantity());
+        dto.setUnit(ingredient.getUnit());
         return dto;
     }
 }

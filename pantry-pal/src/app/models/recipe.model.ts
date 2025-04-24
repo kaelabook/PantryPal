@@ -3,12 +3,12 @@ export interface RecipeIngredient {
   name: string;
   quantity: number;
   unit: string;
+  category: string;
   recipeId?: number;
 }
 
 export interface Recipe {
   id?: number;
-  userId?: number;
   name: string;
   description: string;
   cookTime: number;

@@ -1,3 +1,6 @@
+-- Only create tables (no DROP DATABASE or USE statements)
+-- Note the PostgreSQL-compatible syntax:
+
 CREATE TABLE IF NOT EXISTS pantry_items (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT,
@@ -38,6 +41,8 @@ CREATE TABLE IF NOT EXISTS shopping_cart (
         'DAIRY', 'SEASONINGS', 'SUBSTITUTIONS', 'MISC'
     ))
 );
+
+-- Sample data (optional)
 INSERT INTO pantry_items (name, category, quantity, unit) VALUES 
     ('Apple', 'FRUITS', 10, 'pieces'),
     ('Tomato', 'VEGETABLES', 5, 'pieces');

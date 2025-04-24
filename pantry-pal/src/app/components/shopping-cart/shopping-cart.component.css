@@ -1,55 +1,48 @@
-/* Ensure the entire page is properly structured */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Prevent scrolling of the page */
+  overflow: hidden;
 }
 
-/* Main container to hold everything, no overflow at the page level */
 .shopping-cart-container {
   display: flex;
-  flex-direction: column; /* Stack sections vertically */
-  height: 100vh; /* Take full available height */
-  overflow-y: hidden; /* Prevent page scrolling */
-  padding-top: 60px; /* Space for the navbar */
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: hidden;
+  padding-top: 60px;
 }
 
-/* Header */
 .center-heading {
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Flex container to show both sections side by side */
 .shopping-cart-sections {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  flex-grow: 1; /* Let sections grow to take remaining space */
-  padding-bottom: 60px; /* Ensure space for checkout button at the bottom */
+  flex-grow: 1;
+  padding-bottom: 60px;
 }
 
-/* Box styles to ensure they fit within the screen */
 .ingredients-list,
 .shopping-cart {
-  width: 48%; /* Each box takes 48% of the width */
+  width: 48%;
   display: flex;
   flex-direction: column;
-  max-height: calc(70vh - 60px); /* 70% of the screen height minus navbar and space for button */
-  padding-left: 15px; /* Adds left padding */
-  padding-right: 15px; /* Adds right padding */
-  overflow: hidden; /* Prevent overflow outside the box */
+  max-height: calc(70vh - 60px);
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow: hidden;
 }
 
-/* Wrapper for search bar and filter */
 .search-filter-wrapper,
 .cart-filter-wrapper {
   width: 100%;
   margin-bottom: 10px;
 }
 
-/* Search and Filter Container */
 .search-filter-container,
 .cart-filter-container {
   display: flex;
@@ -58,19 +51,17 @@ body, html {
   width: 100%;
 }
 
-/* Scrollable content for both sections */
 .ingredients-scroll-container,
 .cart-scroll-container {
   flex-grow: 1;
-  overflow-y: auto; /* Enables scrolling inside the boxes */
-  max-height: 100%; /* Ensures it fills the section's available height */
+  overflow-y: auto;
+  max-height: 100%;
   border: 1px solid #CBA052;
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-/* Table Styling */
 .shopping-cart-table {
   width: 100%;
   border-collapse: collapse;
@@ -92,7 +83,6 @@ body, html {
   background-color: #f9f9f9;
 }
 
-/* Nicer Add to Cart button in the ingredients list */
 .shopping-cart-table button.add-to-cart-btn {
   padding: 8px 12px;
   font-size: 14px;
@@ -100,20 +90,19 @@ body, html {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  background-color: #046A38; /* Green to match the theme */
+  background-color: #046A38;
   color: white;
 }
 
 .shopping-cart-table button.add-to-cart-btn:hover {
-  background-color: #719949; /* Lighter green on hover */
-  transform: scale(1.05); /* Slight hover effect */
+  background-color: #719949;
+  transform: scale(1.05);
 }
 
 .shopping-cart-table button.add-to-cart-btn:active {
-  transform: scale(0.95); /* Slight click effect */
+  transform: scale(0.95);
 }
 
-/* Nicer Edit and Delete buttons in the shopping cart table */
 .shopping-cart-table button {
   padding: 8px 12px;
   font-size: 14px;
@@ -124,38 +113,35 @@ body, html {
 }
 
 .shopping-cart-table button:hover {
-  transform: scale(1.05); /* Slight hover effect */
+  transform: scale(1.05);
 }
 
 .shopping-cart-table button:active {
-  transform: scale(0.95); /* Slight click effect */
+  transform: scale(0.95);
 }
 
-/* Edit button styling */
 .shopping-cart-table button.edit-button {
-  background-color: #046A38; /* Green to match the theme */
+  background-color: #046A38;
   color: white;
-  margin-right: 8px; /* Space between buttons */
+  margin-right: 8px;
 }
 
 .shopping-cart-table button.edit-button:hover {
-  background-color: #719949; /* Lighter green on hover */
+  background-color: #719949;
 }
 
-/* Delete button styling */
 .shopping-cart-table button.delete-button {
-  background-color: #e74c3c; /* Red for delete */
+  background-color: #e74c3c;
   color: white;
 }
 
 .shopping-cart-table button.delete-button:hover {
-  background-color: #c0392b; /* Darker red on hover */
+  background-color: #c0392b;
 }
 
-/* Floating button for adding items */
 .floating-button {
   position: fixed;
-  bottom: 60px; /* Space for the checkout button */
+  bottom: 60px;
   right: 20px;
   width: 60px;
   height: 60px;
@@ -172,7 +158,6 @@ body, html {
   color: #F8E08E;
 }
 
-/* Popup window */
 .popup {
   position: fixed;
   top: 50%;
@@ -185,7 +170,7 @@ body, html {
   max-height: 80vh;
   overflow-y: auto;
   width: 90%;
-  max-width: 400px; /* Slightly narrower for a sleeker look */
+  max-width: 400px;
   z-index: 1000;
 }
 
@@ -196,29 +181,26 @@ body, html {
   text-align: center;
 }
 
-/* Form container inside the popup */
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Space between form elements */
+  gap: 15px;
 }
 
-/* Labels */
 .form-container label {
-  font-size: 16px; /* Larger font size */
-  color: #333; /* Darker color for better visibility */
-  margin-bottom: 8px; /* Slightly more space below labels */
-  font-weight: 600; /* Bold for emphasis */
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
-/* Input fields */
 .form-container input {
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 6px;
   width: 100%;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 
@@ -227,7 +209,6 @@ body, html {
   outline: none;
 }
 
-/* Buttons inside the popup */
 .submit-row {
   display: flex;
   justify-content: flex-end;
@@ -262,7 +243,6 @@ body, html {
   background-color: #c0392b;
 }
 
-/* Checkout button */
 .checkout-btn {
   background-color: #00482B;
   color: #F8E08E;
@@ -276,4 +256,16 @@ body, html {
 
 .checkout-btn:hover {
   background-color: #6A9D4D;
+}
+
+.search-filter-container, .cart-filter-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filter-dropdown {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
