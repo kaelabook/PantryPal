@@ -1,19 +1,41 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Quicksand:wght@600&display=swap');
+
+/* Color Variables */
+:root {
+  --background-light: #f9f9f9;
+  --text-dark: #2e2e2e;
+  --accent-beige: #eadbc8;
+  --accent-green: #a3b18a;
+  --accent-terracotta: #ddb892;
+  --hover: #7d8f69;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', sans-serif;
+}
+
 .navbar {
     overflow: hidden;
-    background-color: #046A38;
+    background-color: var(--accent-green);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 10px 15px;
     height: auto;
+    font-family: 'Poppins', sans-serif;
   }
   
   .navbar a {
     margin-left: auto;
     margin-right: auto;
     font-size: 16px;
-    color: #F2F1F0;
+    color: var(--background-light);
     text-align: center;
     padding: 10px 12px;
     text-decoration: none;
@@ -21,13 +43,15 @@
   
   .user-info {
     font-size: 16px;
-    color: #F2F1F0;
+    color: var(--background-light);
     padding: 10px 12px;
     margin-right: 20px;
+    font-family: 'Poppins', sans-serif;
   }
   
   .user-info span {
     font-size: 16px;
-    color: #F2F1F0;
+    color: var(--background-light);
+    font-family: 'Quicksand', sans-serif;
   }
   

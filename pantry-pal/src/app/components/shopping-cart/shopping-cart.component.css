@@ -1,3 +1,24 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Quicksand:wght@600&display=swap');
+
+/* Color Variables */
+:root {
+  --background-light: #f9f9f9;
+  --text-dark: #2e2e2e;
+  --accent-beige: #eadbc8;
+  --accent-green: #a3b18a;
+  --accent-terracotta: #ddb892;
+  --hover: #7d8f69;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', sans-serif;
+}
+
 body, html {
   margin: 0;
   padding: 0;
@@ -15,7 +36,9 @@ body, html {
 
 .center-heading {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  color: var(--text-dark);
+  font-size: 30px;
 }
 
 .shopping-cart-sections {
@@ -56,7 +79,7 @@ body, html {
   flex-grow: 1;
   overflow-y: auto;
   max-height: 100%;
-  border: 1px solid #CBA052;
+  border: 1px solid var(--accent-terracotta);
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
@@ -75,12 +98,12 @@ body, html {
 }
 
 .shopping-cart-table th {
-  background-color: #046A38;
+  background-color: var(--accent-green);
   color: white;
 }
 
 .shopping-cart-table td {
-  background-color: #f9f9f9;
+  background-color: var(--background-light);
 }
 
 .shopping-cart-table button.add-to-cart-btn {
@@ -90,12 +113,12 @@ body, html {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  background-color: #046A38;
-  color: white;
+  background-color: var(--accent-green);
+  color: var(--background-light);
 }
 
 .shopping-cart-table button.add-to-cart-btn:hover {
-  background-color: #719949;
+  background-color: var(--hover);
   transform: scale(1.05);
 }
 
@@ -121,13 +144,13 @@ body, html {
 }
 
 .shopping-cart-table button.edit-button {
-  background-color: #046A38;
+  background-color: var(--accent-green);
   color: white;
   margin-right: 8px;
 }
 
 .shopping-cart-table button.edit-button:hover {
-  background-color: #719949;
+  background-color: var(--hover);
 }
 
 .shopping-cart-table button.delete-button {
@@ -145,7 +168,7 @@ body, html {
   right: 20px;
   width: 60px;
   height: 60px;
-  background-color: #046A38;
+  background-color: var(--accent-green);
   color: #E7E3C6;
   font-size: 24px;
   border: none;
@@ -154,7 +177,7 @@ body, html {
 }
 
 .floating-button:hover {
-  background-color: #719949;
+  background-color: var(--hover);
   color: #F8E08E;
 }
 
@@ -205,7 +228,7 @@ body, html {
 }
 
 .form-container input:focus {
-  border-color: #046A38;
+  border-color: var(--accent-green);
   outline: none;
 }
 
@@ -226,12 +249,12 @@ body, html {
 }
 
 .submit-row button[type="submit"] {
-  background-color: #046A38;
+  background-color: var(--accent-green);
   color: white;
 }
 
 .submit-row button[type="submit"]:hover {
-  background-color: #719949;
+  background-color: var(--hover);
 }
 
 .submit-row button[type="button"] {
@@ -244,18 +267,19 @@ body, html {
 }
 
 .checkout-btn {
-  background-color: #00482B;
-  color: #F8E08E;
+  background-color: var(--accent-green);
+  color: var(--background-light);
   font-size: 16px;
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .checkout-btn:hover {
-  background-color: #6A9D4D;
+  background-color: var(--hover);
 }
 
 .search-filter-container, .cart-filter-container {
