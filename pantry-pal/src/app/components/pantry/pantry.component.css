@@ -27,11 +27,13 @@ body, html {
 }
 
 .pantry-container {
-  height: 100vh;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   padding-top: 80px;
   overflow: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
   background-color: var(--background-light);
 }
 
@@ -47,10 +49,14 @@ app-navbar {
 }
 
 .center-heading {
+  display: block;
+  width: 100%;
   text-align: center;
-  margin-bottom: 30px;
-  color: var(--text-dark);
+  margin: 130px auto 30px auto; 
+  padding: 0;
   font-size: 30px;
+  color: var(--text-dark);
+  line-height: 1.2;
 }
 
 .alert {

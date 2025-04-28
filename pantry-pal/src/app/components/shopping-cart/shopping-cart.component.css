@@ -30,15 +30,22 @@ body, html {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  padding-top: 80px;
   overflow-y: hidden;
-  padding-top: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--background-light);
 }
 
 .center-heading {
+  display: block;
+  width: 100%;
   text-align: center;
-  margin-bottom: 30px;
-  color: var(--text-dark);
+  margin: 30px auto; 
+  padding: 0;
   font-size: 30px;
+  color: var(--text-dark);
+  line-height: 1.2;
 }
 
 .shopping-cart-sections {
