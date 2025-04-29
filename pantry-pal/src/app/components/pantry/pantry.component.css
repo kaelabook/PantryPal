@@ -52,7 +52,7 @@ app-navbar {
   display: block;
   width: 100%;
   text-align: center;
-  margin: 130px auto 30px auto; 
+  margin: 80px auto 30px auto; 
   padding: 0;
   font-size: 30px;
   color: var(--text-dark);
