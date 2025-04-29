@@ -1,11 +1,33 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Quicksand:wght@600&display=swap');
+
+/* Color Variables */
+:root {
+  --background-light: #f9f9f9;
+  --text-dark: #2e2e2e;
+  --accent-beige: #eadbc8;
+  --accent-green: #a3b18a;
+  --accent-terracotta: #ddb892;
+  --hover: #7d8f69;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', sans-serif;
+}
+
 .home-container {
   text-align: center;
   margin-top: 50px;
   padding: 20px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .info-box {
-  background-color: #F2F1F0;
+  background-color: var(--background-light);
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
@@ -13,17 +35,17 @@
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid red;
+  border: 1px solid var(--accent-terracotta);
 }
 
 .title {
   font-size: 36px;
-  color: #046A38;
+  color: var(--accent-green);
   margin-bottom: 20px;
 }
 
 .info-box p {
-  color: #333;
+  color: var(--text-dark);
   font-size: 18px;
 }
 
@@ -36,16 +58,17 @@
 
 .auth-btn {
   padding: 12px 24px;
-  background-color: #046A38;
-  color: #fff;
+  background-color: var(--accent-green);
+  color: var(--background-light);
   font-size: 16px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .auth-btn:hover {
-  background-color: #719949;
+  background-color: var(--hover);
 }
 
 .popup {
@@ -53,7 +76,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: var(--background-light);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(16, 24, 32, 0.2);
@@ -61,6 +84,7 @@
   overflow-y: auto;
   width: 80%;
   max-width: 400px;
+  font-family: 'Poppins', sans-serif;
 }
 
 form {
@@ -73,18 +97,22 @@ input {
   padding: 8px;
   font-size: 16px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--accent-beige);
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  font-family: 'Poppins', sans-serif;
 }
 
 button {
   padding: 10px;
-  background-color: #046A38;
-  color: #fff;
+  background-color: var(--accent-green);
+  color: var(--background-light);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
 }
 
 button:hover {
-  background-color: #719949;
+  background-color: var(--hover);
 }

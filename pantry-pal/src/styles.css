@@ -1,6 +1,36 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Quicksand:wght@600&display=swap');
+
+/* Color Variables */
+:root {
+  --background-light: #f9f9f9;
+  --text-dark: #2e2e2e;
+  --accent-beige: #eadbc8;
+  --accent-green: #a3b18a;
+  --accent-terracotta: #ddb892;
+  --hover: #7d8f69;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', sans-serif;
+}
+
+/* General Page Setup */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+}
+
+/* Navbar */
 .navbar {
     overflow: hidden;
-    background-color: #046A38;
+    background-color: var(--accent-green);
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -32,18 +62,18 @@
     opacity: 0.9;
   }
   .navbar a.active, .dropdown:hover.active .dropbtn {
-    background-color: #00482B;
-    color: #CBA052;
+    background-color: var(--accent-terracotta);
+    color: var(--text-dark);
   }
   .navbar a:hover:not(.active), .dropdown:hover:not(.active) .dropbtn {
-    background-color: #E7E3C6;
-    color: #101820;
+    background-color: var(--accent-beige);
+    color: var(--text-dark);
   }
   .dropdown-content {
     right: 0;
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: var(--background-light);
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(16,24,32,0.2);
     z-index: 1;
@@ -58,10 +88,4 @@
   }
   .dropdown:hover .dropdown-content {
     display: block;
-  }
-  
-  body {
-    margin: 0;
-    font-family: sans-serif;
-    background-color: #F2F1F0;
   }
